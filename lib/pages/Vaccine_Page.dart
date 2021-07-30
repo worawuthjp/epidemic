@@ -215,7 +215,7 @@ class _VaccinePageState extends State<VaccinePage> {
                         uploadImage();
                       },
                       icon: Icon(
-                        Icons.upload,
+                        Icons.upload_file,
                         size: 25,
                         color: Colors.grey[500],
                       ),
