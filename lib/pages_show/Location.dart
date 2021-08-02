@@ -377,6 +377,7 @@ class _LocationPageState extends State<LocationPage> {
 
                   Divider(),
 
+                  checkIn.placeName != null ?
                   Text(
                     checkIn.placeName,
                     style: GoogleFonts.kanit(
@@ -384,7 +385,8 @@ class _LocationPageState extends State<LocationPage> {
                         fontWeight: FontWeight.bold,
                         color: Colors.black
                     ),
-                  ),
+                  )
+                  : Container(),
 
                 ],
               ),
@@ -395,6 +397,9 @@ class _LocationPageState extends State<LocationPage> {
 
               Column(
                 children: [
+
+                  checkIn.timeCheckIn != null ?
+
                   Text(
                     "เช็คอินเมื่อ " + getTimeCheckIn(checkIn.timeCheckIn),
                     style: GoogleFonts.kanit(
@@ -402,8 +407,8 @@ class _LocationPageState extends State<LocationPage> {
                         fontWeight: FontWeight.bold,
                         color: Colors.blue
                     ),
-                  ),
-
+                  )
+                  : Container(),
                   Container(
                     margin: EdgeInsets.only(left: 16, top: 8, right: 16, bottom: 8),
                     child: SizedBox(
