@@ -35,19 +35,19 @@ class TodayStatus {
   String devBy;
 
   factory TodayStatus.fromJson(Map<String, dynamic> json) => TodayStatus(
-        confirmed: json["Confirmed"] == null ? null : json["Confirmed"],
-        recovered: json["Recovered"] == null ? null : json["Recovered"],
+        confirmed: json["Confirmed"] == null ? -1 : json["Confirmed"],
+        recovered: json["Recovered"] == null ? -1 : json["Recovered"],
         hospitalized:
-            json["Hospitalized"] == null ? null : json["Hospitalized"],
-        deaths: json["Deaths"] == null ? null : json["Deaths"],
+            json["Hospitalized"] == null ? -1 : json["Hospitalized"],
+        deaths: json["Deaths"] == null ? -1 : json["Deaths"],
         newConfirmed:
-            json["NewConfirmed"] == null ? null : json["NewConfirmed"],
+            json["NewConfirmed"] == null ? -1 : json["NewConfirmed"],
         newRecovered:
-            json["NewRecovered"] == null ? null : json["NewRecovered"],
+            json["NewRecovered"] == null ? -1 : json["NewRecovered"],
         newHospitalized:
-            json["NewHospitalized"] == null ? null : json["NewHospitalized"],
-        newDeaths: json["NewDeaths"] == null ? null : json["NewDeaths"],
-        updateDate: json["UpdateDate"] == null ? null : json["UpdateDate"],
+            json["NewHospitalized"] == null ? -1 : json["NewHospitalized"],
+        newDeaths: json["NewDeaths"] == null ? -1 : json["NewDeaths"],
+        updateDate: json["UpdateDate"] == null ? -1 : json["UpdateDate"],
         devBy: json["DevBy"] == null ? null : json["DevBy"],
       );
 

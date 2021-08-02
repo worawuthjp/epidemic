@@ -1,6 +1,5 @@
 
-
-import 'file:///C:/Users/chana/Desktop/work/ProjectEpidemicApp/lib/models/TimelineModel.dart';
+import 'package:covidapp/models/TimelineModel.dart';
 import 'package:covidapp/models/UserModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +41,7 @@ class _TimelinePageState extends State<TimelinePage> {
     return DateFormat('yyyy-MM-dd').format(dateSelect);
   }
 
-  Future<List<Place>> _getAllTimeline() async{
+  Future<List<PlaceTimeline>> _getAllTimeline() async{
     String date = formatDate(selectDate);
     print("userID : " + user.userID);
     print("Start Selected Date : " + date);
@@ -53,7 +52,7 @@ class _TimelinePageState extends State<TimelinePage> {
       timeline = timelineFromJson(response.body);
     });
 
-    List<Place> places = [];
+    List<PlaceTimeline> places = [];
 
     if (timeline.message == "success") {
       places = timeline.places;
@@ -105,11 +104,17 @@ class _TimelinePageState extends State<TimelinePage> {
                           color: Colors.blue
                       ),
                       // child: CircleAvatar(
-                      //   radius: 27,
+                      //   radius: 60,
                       //   backgroundImage: NetworkImage(
                       //       "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
                       //   backgroundColor: Colors.transparent,
                       // ),
+                      child: CircleAvatar(
+                        radius: 60,
+                        backgroundImage: NetworkImage(
+                            "https://lotto.myminesite.com/signup/avataruser/${user.picture}"),
+                        backgroundColor: Colors.transparent,
+                      ),
                     )
                 ),
 
@@ -278,7 +283,7 @@ class _TimelinePageState extends State<TimelinePage> {
     return correctTime;
   }
 
-  String timeLineFormat(Place place) {
+  String timeLineFormat(PlaceTimeline place) {
     String timeIn = verifyTime(place.checkIn.hour) + ":" + verifyTime(place.checkIn.minute);
     String timeOut = place.checkOut != null ? verifyTime(place.checkOut.hour) + ":" + verifyTime(place.checkOut.minute) : null;
     String time = timeOut != null ? timeIn + " - " + timeOut : timeIn;

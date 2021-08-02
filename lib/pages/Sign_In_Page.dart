@@ -32,6 +32,9 @@ class _SignInPageState extends State<SignInPage> {
     var response = await http.post(urlLogin,
         body: {"user_username": username.text, "user_password": password.text});
 
+    // var response = await http.post(urlLogin,
+    //     body: {"user_username": "Yokwcth", "user_password": "1234"});
+
     if (response.statusCode != 200) {
       ArtSweetAlert.show(
           context: context,
@@ -146,8 +149,7 @@ class _SignInPageState extends State<SignInPage> {
                   child: TextFormField(
                     controller: password,
                     obscureText: isHiddenPassword,
-                    validator:
-                    RequiredValidator(errorText: 'กรุณากรอกรหัสผ่าน '),
+                    validator: RequiredValidator(errorText: 'กรุณากรอกรหัสผ่าน '),
                     decoration: InputDecoration(
                       hintText: 'Password',
                       prefixIcon: Icon(Icons.lock),

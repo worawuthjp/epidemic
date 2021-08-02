@@ -31,8 +31,8 @@ class _HomePageState extends State<HomePage> {
         return HomePageTwo(user: user);
         break;
       case 1:
-        print("Select Page : Location");
-        return Location();
+        print("Select Page : CheckInPage");
+        return LocationPage(user: user);
         break;
       case 2:
         print("Select Page : TimelinePage");
@@ -65,11 +65,6 @@ class _HomePageState extends State<HomePage> {
     print("initState -> Username is : " + user.username);
   }
 
-  //
-  // final PageStorageBucket bucket = PageStorageBucket();
-
-  Widget currentScreen;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,30 +72,30 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTappedBar,
         currentIndex: _currentIndex,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.lightBlue[400],
         items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.home),
               // backgroundColor: Color(0xffA2DAFF),
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.lightBlue[400],
               title: _currentIndex == 0 ? Text(
                 'Home', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.location_on),
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.lightBlue[400],
               title: _currentIndex == 1 ? Text(
-                'Location', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
+                'Check in', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.history),
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.lightBlue[400],
               title: _currentIndex == 2 ? Text(
                 'TimeLine', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.person),
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.lightBlue[400],
               title: _currentIndex == 3 ? Text(
                 'Profile', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
           ),

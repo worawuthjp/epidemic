@@ -5,7 +5,7 @@ Timeline timelineFromJson(String str) =>
 
 class Timeline {
 
-  List<Place> places;
+  List<PlaceTimeline> places;
   String message;
 
   factory Timeline.fromJson(Map<String , dynamic> json) => Timeline(json["places"], json["msg"]);
@@ -13,10 +13,11 @@ class Timeline {
   Timeline(List places, String message){
     this.message = message;
 
-    List<Place> placeAll = [];
+    List<PlaceTimeline> placeAll = [];
 
     for(var placeSelect in places) {
-      Place place = Place(placeSelect["id"],
+      PlaceTimeline place = PlaceTimeline(
+          placeSelect["id"],
           placeSelect["lat"],
           placeSelect["long"],
           placeSelect["place_name"],
@@ -30,7 +31,7 @@ class Timeline {
   }
 }
 
-class Place {
+class PlaceTimeline {
   String id;
   String latitude;
   String longtitude;
@@ -38,7 +39,7 @@ class Place {
   DateTime checkIn;
   DateTime checkOut;
 
-  Place(String id, String latitude, String longtitude, String placeName, String checkIn,String checkOut) {
+  PlaceTimeline(String id, String latitude, String longtitude, String placeName, String checkIn,String checkOut) {
     this.id = id == null ? null : id;
     this.latitude = latitude == null ? null : latitude;
     this.longtitude = longtitude == null ? null : longtitude;
