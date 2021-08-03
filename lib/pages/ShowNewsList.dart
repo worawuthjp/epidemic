@@ -1,3 +1,4 @@
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/pages_show/ShowNewsDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -21,7 +22,7 @@ class _ShowNewsListState extends State<ShowNewsList> {
   _ShowNewsListState({this.name, this.profilePic});
 
   Future<List> getNews() async {
-    var url = Uri.parse("http://172.20.10.8/covid/getNews/getNew.php");
+    var url = Uri.parse("${hostname}/getNews/getNew.php");
     var response = await http.get(url);
     return json.decode(response.body);
   }

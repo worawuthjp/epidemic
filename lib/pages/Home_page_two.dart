@@ -1,4 +1,5 @@
 import 'package:covidapp/Show_Box.dart';
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/models/UserModel.dart';
 import 'package:covidapp/pages/MapShow.dart';
 import 'package:covidapp/pages/Timeline.dart';
@@ -54,7 +55,7 @@ class _HomePageTwoState extends State<HomePageTwo> {
   Future<void> getNews() async {
     var url = Uri.parse(
         'https://covid19.th-stat.com/json/covid19v2/getTodayCases.json');
-    var response = await http.get('https://covid19.th-stat.com/json/covid19v2/getTodayCases.json');
+    var response = await http.get(url);
     //print(response.body);
     setState(() {
       todayStatus = todayStatusFromJson(response.body);
@@ -159,10 +160,9 @@ class _ItemsState extends State<Items> {
   bool isVisibilityStatus = true;
 
   Future<List> getNews() async {
-    // var url = Uri.parse(
-    //     "http://172.20.10.8/ConnectDBProject/connectApp/getNews/getNew.php");
-    // var response = await http.get(url);
-    // return json.decode(response.body);
+    var url = Uri.parse("${hostname}/getNews/getNew.php") ;
+    var response = await http.get(url);
+    return json.decode(response.body);
   }
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -238,7 +238,7 @@ class _ItemsState extends State<Items> {
                     child: CircleAvatar(
                       radius: 60,
                       backgroundImage: NetworkImage(
-                          "https://lotto.myminesite.com/signup/avataruser/${user.picture}"),
+                          "${hostname}/signup/avataruser/${user.picture}"),
                       backgroundColor: Colors.transparent,
                     ),
                   )
@@ -246,7 +246,7 @@ class _ItemsState extends State<Items> {
                 Form(
                   key: formKey,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(40, 40, 40, 15),
+                    padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
                     child: TextFormField(
                       controller: search,
                       decoration: InputDecoration(
@@ -426,6 +426,8 @@ class _ItemsState extends State<Items> {
                         }
                       }),
                 ),
+
+                confirmed != null ?
                 Visibility(
                     visible: isVisibilityStatus,
                     child: Container(
@@ -508,14 +510,25 @@ class _ItemsState extends State<Items> {
                           ),
                         ],
                       ),
-                    ))
+                    )
+                )
+                :
+                Center(
+                  child: Text(
+                    "ไม่มีข้อมูล",
+                    style: GoogleFonts.kanit(
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
+                  ),
+                )
               ],
             ),
           ),
         ),
       )
     );
-
 
   }
 }

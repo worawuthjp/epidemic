@@ -1,3 +1,4 @@
+import 'package:covidapp/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
@@ -56,7 +57,7 @@ class SearchEpidemicDetails extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 27,
                       backgroundImage: NetworkImage(
-                          "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
+                          "${hostname}/signup/avataruser/$picture"),
                     ),
                   )
                 ],

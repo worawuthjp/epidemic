@@ -1,3 +1,4 @@
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
 import 'package:covidapp/pages_show/Profile_User.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   void editUserData() {
     var url = Uri.parse(
-        "http://172.20.10.8/ConnectDBProject/connectApp/edit/editUserData.php");
+        "${hostname}/edit/editUserData.php");
     http.post(url, body: {
       "user_studentID": userstudentID.text,
       "user_fullname": userfullname.text,
@@ -135,7 +136,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 child: CircleAvatar(
                   radius: 60,
                   backgroundImage: NetworkImage(
-                      "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
+                      "${hostname}/signup/avataruser/$picture"),
                 ),
               ),
               SizedBox(

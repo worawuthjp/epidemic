@@ -1,3 +1,4 @@
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
 
 import 'package:covidapp/pages_show/Search_epidemic_Details.dart';
@@ -68,7 +69,7 @@ class _SearchEpidemicPageState extends State<SearchEpidemicPage> {
 
   Future<List> getData() async {
     var url = Uri.parse(
-        "http://172.20.10.8/ConnectDBProject/connectApp/getEpidemic/getEpidemicFromSearch.php?search=$search");
+        "${hostname}/getEpidemic/getEpidemicFromSearch.php?search=$search");
     var response = await http.get(url);
     return json.decode(response.body);
   }

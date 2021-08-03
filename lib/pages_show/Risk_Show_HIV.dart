@@ -1,3 +1,4 @@
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/pages/Container_Page.dart';
 import 'package:covidapp/pages/DataRisk.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
@@ -84,7 +85,7 @@ class _RiskShowHivState extends State<RiskShowHiv> {
             child: CircleAvatar(
                 radius: 110,
                 backgroundImage: NetworkImage(
-                    "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture")),
+                    "${hostname}/signup/avataruser/$picture")),
           ),
           SizedBox(
             height: 20,

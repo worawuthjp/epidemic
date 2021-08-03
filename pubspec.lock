@@ -103,7 +103,7 @@ packages:
       name: flutter_plugin_android_lifecycle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "1.0.11"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -155,14 +155,14 @@ packages:
       name: google_maps_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.6"
+    version: "1.2.0"
   google_maps_flutter_platform_interface:
     dependency: transitive
     description:
       name: google_maps_flutter_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "1.2.0"
   http:
     dependency: "direct main"
     description:
@@ -178,19 +178,19 @@ packages:
     source: hosted
     version: "3.1.4"
   image_picker:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.2+3"
-  image_picker_gallery_camera:
-    dependency: "direct main"
+    version: "0.6.7+22"
+  image_picker_platform_interface:
+    dependency: transitive
     description:
-      name: image_picker_gallery_camera
+      name: image_picker_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.5"
+    version: "1.1.6"
   intl:
     dependency: "direct main"
     description:
@@ -377,7 +377,7 @@ packages:
       name: stream_transform
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "1.2.0"
   string_scanner:
     dependency: transitive
     description:

@@ -1,3 +1,4 @@
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/pages/Container_Page.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
 import 'package:covidapp/pages_show/Risk_Show_Page.dart';
@@ -38,7 +39,7 @@ class _RiskFormPageState extends State<RiskFormPage> {
   String noSymp = "ไม่เป็น";
 
   void addData() {
-    var url = Uri.parse("http://172.20.10.8/covid/Form/addDataCovid.php");
+    var url = Uri.parse("${hostname}/Form/addDataCovid.php");
     http.post(url, body: {
       "assignment_vomit": vomit,
       "assignment_cough": cough,
@@ -104,7 +105,7 @@ class _RiskFormPageState extends State<RiskFormPage> {
                     child: CircleAvatar(
                       radius: 27,
                       backgroundImage: NetworkImage(
-                          "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
+                          "${hostname}/signup/avataruser/$picture"),
                     ),
                   )
                 ],

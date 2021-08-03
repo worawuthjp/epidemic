@@ -1,14 +1,13 @@
 import 'dart:convert';
-import 'dart:typed_data';
+
 import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:covidapp/home.dart';
 import 'package:covidapp/models/UserModel.dart';
-import 'package:covidapp/pages/Container_Page.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+
 import '../constants.dart';
 
 class SignInPage extends StatefulWidget {
@@ -21,19 +20,22 @@ class _SignInPageState extends State<SignInPage> {
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
 
-  String urlLogin = hostname + "/signin/login.php";
+  String urlLogin = "${hostname}/signin/login.php";
 
   Future login() async {
+    print("location");
     // var url = Uri.parse(
     //     "http://172.20.10.8/ConnectDBProject/connectApp/signin/login.php");
     // var response = await http.post(url,
     //     body: {"user_username": username.text, "user_password": password.text});
 
-    var response = await http.post(urlLogin,
-        body: {"user_username": username.text, "user_password": password.text});
-
     // var response = await http.post(urlLogin,
-    //     body: {"user_username": "Yokwcth", "user_password": "1234"});
+    //     body: {"user_username": username.text, "user_password": password.text});
+
+    var response = await http.post(urlLogin,
+        body: {"user_username": "Yokwcth", "user_password": "1234"});
+
+    print(response.statusCode);
 
     if (response.statusCode != 200) {
       ArtSweetAlert.show(
@@ -51,7 +53,8 @@ class _SignInPageState extends State<SignInPage> {
         // preferences.setString('userID', data["userID"]);
 
         String userID = data["userID"];
-        response = await http.get("https://lotto.myminesite.com/getdata/getuserdatabase.php?id=${userID}");
+        var urlgetUser = Uri.parse("${hostname}/getdata/getuserdatabase.php?id=${userID}");
+        response = await http.get(urlgetUser);
         var userJson = json.decode(response.body);
         print(userJson);
 
@@ -134,13 +137,14 @@ class _SignInPageState extends State<SignInPage> {
                   child: TextFormField(
                     controller: username,
                     autofocus: true,
-                    validator: RequiredValidator(errorText: 'กรุณากรอกชื่อ '),
+                    // validator: RequiredValidator(errorText: 'กรุณากรอกชื่อ '),
                     decoration: InputDecoration(
                       hintText: 'Username Or E-mail',
                       prefixIcon: Icon(Icons.account_circle_rounded),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30)),
                     ),
+                    textInputAction: TextInputAction.next,
                     //keyboardType: TextInputType.emailAddress,
                   ),
                 ),
@@ -149,7 +153,7 @@ class _SignInPageState extends State<SignInPage> {
                   child: TextFormField(
                     controller: password,
                     obscureText: isHiddenPassword,
-                    validator: RequiredValidator(errorText: 'กรุณากรอกรหัสผ่าน '),
+                    // validator: RequiredValidator(errorText: 'กรุณากรอกรหัสผ่าน '),
                     decoration: InputDecoration(
                       hintText: 'Password',
                       prefixIcon: Icon(Icons.lock),
@@ -157,6 +161,7 @@ class _SignInPageState extends State<SignInPage> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30)),
                     ),
+                    textInputAction: TextInputAction.done,
                   ),
                 ),
                 SizedBox(

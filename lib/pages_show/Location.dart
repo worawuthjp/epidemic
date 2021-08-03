@@ -32,8 +32,8 @@ class _LocationPageState extends State<LocationPage> {
 
   Future<CheckIn> currentStatus() async{
 
-    final String url = "${hostname}/timeline/checkin.php?userID=${user.userID}";
-    var response = await http.get(url);
+    var uri = Uri.parse("${hostname}/timeline/checkin.php?userID=${user.userID}");
+    var response = await http.get(uri);
     List<PlaceMap> nearbyPlace = await checkInService();
     // List<PlaceMap> nearbyPlace = dataPlaceTest();
     setState(() {
@@ -129,7 +129,7 @@ class _LocationPageState extends State<LocationPage> {
   Future<List<PlaceMap>> getPlaceNearbyUser(Position userLocation) async {
 
     int radius = 500;
-    String nearbyURL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${userLocation.latitude},${userLocation.longitude}&radius=${radius.toString()}&key=${placeAPI}";
+    var nearbyURL = Uri.parse("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${userLocation.latitude},${userLocation.longitude}&radius=${radius.toString()}&key=${placeAPI}");
     var response = await http.get(nearbyURL);
     var data = json.decode(response.body);
 
@@ -409,6 +409,7 @@ class _LocationPageState extends State<LocationPage> {
                     ),
                   )
                   : Container(),
+
                   Container(
                     margin: EdgeInsets.only(left: 16, top: 8, right: 16, bottom: 8),
                     child: SizedBox(
@@ -447,9 +448,9 @@ class _LocationPageState extends State<LocationPage> {
 
   Future<void> onTappedCheckin(String userID,LatLng position , String placeName, String placeID) async {
 
-    String url = "${hostname}/timeline/checkin.php";
+    var uri = Uri.parse("${hostname}/timeline/checkin.php") ;
 
-    var response = await http.post(url, body: {
+    var response = await http.post(uri, body: {
       "userID" : userID,
       "lat" : position.latitude.toString(),
       "long" : position.longitude.toString(),
@@ -474,8 +475,8 @@ class _LocationPageState extends State<LocationPage> {
   }
 
   Future<void> onTappedCheckOut(String userID) async{
-    final String url = "${hostname}/timeline/checkout.php";
-    var response = await http.post(url, body: {
+    var uri = Uri.parse("${hostname}/timeline/checkout.php");
+    var response = await http.post(uri, body: {
       "userID" : userID
     });
     Map<String, dynamic> data = json.decode(response.body);

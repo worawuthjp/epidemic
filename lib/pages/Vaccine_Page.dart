@@ -1,12 +1,15 @@
+
 import 'dart:io';
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
 import 'package:covidapp/pages_show/Vaccine_Complet.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
+// import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
 
 class VaccinePage extends StatefulWidget {
   String username;
@@ -25,12 +28,12 @@ class VaccinePage extends StatefulWidget {
 }
 
 class _VaccinePageState extends State<VaccinePage> {
-  File _image;
   File imgFile;
 
   String username;
   String picture;
   String studentID;
+  final ImagePicker _picker = ImagePicker();
 
   String status = "No";
   String now = DateFormat('yyyy-MM-dd -- HH:mm:ss').format(DateTime.now());
@@ -41,24 +44,25 @@ class _VaccinePageState extends State<VaccinePage> {
     this.studentID = studentID;
   }
 
-  Future getImage(ImgSource source) async {
-    var image = await ImagePickerGC.pickImage(
-        context: context,
-        source: source,
-        cameraIcon: Icon(
-          Icons.add,
-          color: Colors.red,
-        ));
+  Future getImage(ImageSource source) async {
+    // var image = await Image.pickImage(
+    //     context: context,
+    //     source: source,
+    //     cameraIcon: Icon(
+    //       Icons.add,
+    //       color: Colors.red,
+    //     ));
+    var image = await _picker.getImage(source: source);
     setState(() {
-      _image = File(image.path);
+      imgFile = File(image.path);
     });
   }
 
   Future uploadImage() async {
     final uri = Uri.parse(
-        "http://172.20.10.8/ConnectDBProject/connectApp/vaccine/addVaccine.php");
+        "${hostname}/vaccine/addVaccine.php");
     var request = http.MultipartRequest('POST', uri);
-    var pic = await http.MultipartFile.fromPath("image", _image.path);
+    var pic = await http.MultipartFile.fromPath("image", imgFile.path);
     request.files.add(pic);
     request.fields['user_vaccine'] = username;
     request.fields['user_status'] = status;
@@ -122,7 +126,7 @@ class _VaccinePageState extends State<VaccinePage> {
                   child: CircleAvatar(
                     radius: 27,
                     backgroundImage: NetworkImage(
-                        "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
+                        "${hostname}/signup/avataruser/$picture"),
                   ),
                 )
               ],
@@ -143,18 +147,18 @@ class _VaccinePageState extends State<VaccinePage> {
             SizedBox(
               height: 20,
             ),
-            _image == null
+            imgFile == null
                 ? Container(
                     child: CircleAvatar(
                         backgroundColor: Colors.blue,
                         radius: 120,
-                        child: _image == null
+                        child: imgFile == null
                             ? Container()
                             : Container(
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     image: DecorationImage(
-                                        image: new FileImage(_image),
+                                        image: new FileImage(imgFile),
                                         fit: BoxFit.fill)),
                               )),
                   )
@@ -162,13 +166,13 @@ class _VaccinePageState extends State<VaccinePage> {
                     child: CircleAvatar(
                         backgroundColor: Colors.blue,
                         radius: 120,
-                        child: _image == null
+                        child: imgFile == null
                             ? Container()
                             : Container(
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     image: DecorationImage(
-                                        image: new FileImage(_image),
+                                        image: new FileImage(imgFile),
                                         fit: BoxFit.fill)),
                               )),
                   ),
@@ -184,7 +188,7 @@ class _VaccinePageState extends State<VaccinePage> {
                   child: RaisedButton.icon(
                       color: Color(0xffF7F9FA),
                       onPressed: () {
-                        getImage(ImgSource.Gallery);
+                        getImage(ImageSource.gallery);
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
@@ -256,45 +260,6 @@ class _VaccinePageState extends State<VaccinePage> {
                       fontWeight: FontWeight.bold,
                       color: Colors.white),
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Color(0xffA2DAFF),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => HomePageTwo()));
-              },
-              icon: Icon(
-                Icons.home,
-                color: Colors.white,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.location_on,
-                color: Colors.white,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.history,
-                color: Colors.white,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.person,
-                color: Colors.white,
               ),
             ),
           ],

@@ -1,3 +1,4 @@
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
 import 'package:covidapp/pages_show/Risk_Show_Page.dart';
 import 'package:covidapp/pages_show/Risk_Show_Plague_Page.dart';
@@ -38,7 +39,7 @@ class _RiskFormPlagueState extends State<RiskFormPlague> {
   String studentID;
 
   void addData() {
-    var url = Uri.parse("http://172.20.10.8/covid/Form/addDataPlague.php");
+    var url = Uri.parse("${hostname}/Form/addDataPlague.php");
     http.post(url, body: {
       "plague_headache": headache,
       "plague_fever": fever,

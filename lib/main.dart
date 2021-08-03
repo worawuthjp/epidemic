@@ -1,5 +1,6 @@
 import 'package:covidapp/pages/Sign_In_Page.dart';
 import 'package:covidapp/pages/Sign_Up_Page.dart';
+import 'package:covidapp/provider/testPage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -93,6 +94,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (BuildContext context) {
                       return SignInPage();
                     }),
+                    // MaterialPageRoute(builder: (BuildContext context) {
+                    //   return TestPage();
+                    // }),
                   );
                 },
                 child: Text(

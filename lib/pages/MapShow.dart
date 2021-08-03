@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
 import 'package:covidapp/pages/Map_Search.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class MapShow extends StatefulWidget {
 class _MapShowState extends State<MapShow> {
   Future<List> getMarker() async {
     var url = Uri.parse(
-        "http://172.20.10.8/ConnectDBProject/connectApp/maps/getAllMark.php");
+        "${hostname}/maps/getAllMark.php");
     var response = await http.get(url);
     return json.decode(response.body);
   }

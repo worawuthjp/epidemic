@@ -1,3 +1,4 @@
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -35,7 +36,7 @@ class _VaccineShowPageState extends State<VaccineShowPage> {
 
   Future<List> getData() async {
     var url = Uri.parse(
-        "http://172.20.10.8/ConnectDBProject/connectApp/vaccine/getVaccine.php?id=$studentID");
+        "${hostname}/vaccine/getVaccine.php?id=$studentID");
     var response = await http.get(url);
     return json.decode(response.body);
   }
@@ -119,7 +120,7 @@ class _ItemsState extends State<Items> {
             child: CircleAvatar(
               radius: 120,
               backgroundImage: NetworkImage(
-                  "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
+                  "${hostname}/signup/avataruser/$picture"),
             ),
           ),
           SizedBox(

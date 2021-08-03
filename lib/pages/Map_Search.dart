@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,7 +27,7 @@ class _MapShowSearchState extends State<MapShowSearch> {
 
   Future<List> getMarker() async {
     var url = Uri.parse(
-        "http://172.20.10.8/ConnectDBProject/connectApp/maps/getMarkFromSearch.php?province=$province&district=$district");
+        "${hostname}/maps/getMarkFromSearch.php?province=$province&district=$district");
     var response = await http.get(url);
     return json.decode(response.body);
   }

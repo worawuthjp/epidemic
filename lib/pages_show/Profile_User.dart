@@ -1,3 +1,4 @@
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/main.dart';
 import 'package:covidapp/pages/EditProfile.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
@@ -65,7 +66,7 @@ class _ProfileUserState extends State<ProfileUser> {
 
   Future<List> getData() async {
     var url = Uri.parse(
-        "http://172.20.10.8/ConnectDBProject/connectApp/vaccine/getVaccine.php?id=$studentID");
+        "${hostname}/vaccine/getVaccine.php?id=$studentID");
     var response = await http.get(url);
     return json.decode(response.body);
   }
@@ -192,7 +193,7 @@ class _ItemsState extends State<Items> {
                 child: CircleAvatar(
                   radius: 60,
                   backgroundImage: NetworkImage(
-                      "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
+                      "${hostname}/signup/avataruser/$picture"),
                 ),
               ),
               SizedBox(
@@ -483,45 +484,6 @@ class _ItemsState extends State<Items> {
                 ),
               ),
               SizedBox(height: 20)
-            ],
-          ),
-        ),
-        bottomNavigationBar: BottomAppBar(
-          color: Color(0xffA2DAFF),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => HomePageTwo()));
-                },
-                icon: Icon(
-                  Icons.home,
-                  color: Colors.white,
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.location_on,
-                  color: Colors.white,
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.history,
-                  color: Colors.white,
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                ),
-              ),
             ],
           ),
         ),

@@ -31,6 +31,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    String passwordString;
+
     return Scaffold(
       backgroundColor: Colors.grey[275],
       body: Container(
@@ -59,6 +62,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: username,
                   //autofocus: true,
                   validator: RequiredValidator(errorText: 'กรุณากรอกชื่อ'),
+                  textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     hintText: 'Username',
                     prefixIcon: Icon(Icons.account_circle_rounded),
@@ -75,6 +79,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     RequiredValidator(errorText: 'กรุณากรอกอีเมลล์'),
                     EmailValidator(errorText: 'กรุณากรอกอีเมลล์ที่ถูกต้อง')
                   ]),
+                  textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     hintText: 'E-mail',
                     prefixIcon: Icon(Icons.email_outlined),
@@ -106,6 +111,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: password,
                   obscureText: isHiddenPassword,
                   validator: RequiredValidator(errorText: 'กรุณากรอกรหัสผ่าน'),
+                  textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     prefixIcon: Icon(Icons.lock),
@@ -113,6 +119,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30)),
                   ),
+                  onChanged: (value) => passwordString = value,
                 ),
                 SizedBox(
                   height: 20,
@@ -120,7 +127,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 TextFormField(
                   controller: confirmpassword,
                   obscureText: isHiddenPassword,
-                  validator: RequiredValidator(errorText: 'กรุณากรอกรหัสผ่าน'),
+                  textInputAction: TextInputAction.done,
                   decoration: InputDecoration(
                     hintText: 'Confirms Password',
                     prefixIcon: Icon(Icons.lock),
@@ -130,6 +137,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30)),
                   ),
+                  validator: (val) => MatchValidator(errorText: 'รหัสผ่านไม่ตรงกัน').validateMatch(val, passwordString)
                 ),
                 SizedBox(
                   height: 20,

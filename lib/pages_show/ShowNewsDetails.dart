@@ -1,3 +1,4 @@
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -64,7 +65,7 @@ class ShowNewsDetails extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 27,
                       backgroundImage: NetworkImage(
-                          "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$profilePic"),
+                          "${hostname}/signup/avataruser/$profilePic"),
                     ),
                   )
                 ],

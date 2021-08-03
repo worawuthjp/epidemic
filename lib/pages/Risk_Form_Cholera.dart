@@ -1,3 +1,4 @@
+import 'package:covidapp/constants.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
 import 'package:covidapp/pages_show/Risk_Show_Cholera.dart';
 import 'package:covidapp/pages_show/Risk_Show_Page.dart';
@@ -76,7 +77,7 @@ class _RiskFormCholeraState extends State<RiskFormCholera> {
                     child: CircleAvatar(
                       radius: 27,
                       backgroundImage: NetworkImage(
-                          "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
+                          "${hostname}/signup/avataruser/$picture"),
                     ),
                   )
                 ],

@@ -95,6 +95,7 @@ class _FormPageState extends State<FormPage> {
                                 hintText: 'ชื่อ-นามสกุลจริง',
                                 hintStyle: GoogleFonts.kanit(
                                     color: Color(0xffacacac), fontSize: 20)),
+                            textInputAction: TextInputAction.next,
                           ),
                         ),
                         Padding(
@@ -107,6 +108,7 @@ class _FormPageState extends State<FormPage> {
                                 hintText: 'รหัสนักศึกษา',
                                 hintStyle: GoogleFonts.kanit(
                                     color: Color(0xffacacac), fontSize: 20)),
+                            textInputAction: TextInputAction.next,
                           ),
                         ),
                         Padding(
@@ -119,6 +121,7 @@ class _FormPageState extends State<FormPage> {
                                 hintText: 'คณะ',
                                 hintStyle: GoogleFonts.kanit(
                                     color: Color(0xffacacac), fontSize: 20)),
+                            textInputAction: TextInputAction.next,
                           ),
                         ),
                         Padding(
@@ -132,6 +135,7 @@ class _FormPageState extends State<FormPage> {
                               hintStyle: GoogleFonts.kanit(
                                   color: Color(0xffacacac), fontSize: 20),
                             ),
+                            textInputAction: TextInputAction.next,
                           ),
                         ),
                         Padding(
@@ -144,6 +148,7 @@ class _FormPageState extends State<FormPage> {
                                 hintText: 'ที่อยู่ตามบัตรประชาชน',
                                 hintStyle: GoogleFonts.kanit(
                                     color: Color(0xffacacac), fontSize: 20)),
+                            textInputAction: TextInputAction.next,
                           ),
                         ),
                         Padding(
@@ -156,6 +161,7 @@ class _FormPageState extends State<FormPage> {
                                 hintText: 'เบอร์โทรศัพท์ที่ติดต่อได้',
                                 hintStyle: GoogleFonts.kanit(
                                     color: Color(0xffacacac), fontSize: 20)),
+                            textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.number,
                           ),
                         ),
@@ -169,6 +175,7 @@ class _FormPageState extends State<FormPage> {
                                 hintText: 'ข้อมูลบุคคลที่ติดต่อได้',
                                 hintStyle: GoogleFonts.kanit(
                                     color: Color(0xffacacac), fontSize: 20)),
+                            textInputAction: TextInputAction.done,
                           ),
                         ),
                       ],

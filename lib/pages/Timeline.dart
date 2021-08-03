@@ -45,7 +45,7 @@ class _TimelinePageState extends State<TimelinePage> {
     String date = formatDate(selectDate);
     print("userID : " + user.userID);
     print("Start Selected Date : " + date);
-    String urlTimeline = hostname + "/timeline/getTimeline.php?userID=${user.userID}&searchDate=${date}";
+    var urlTimeline = Uri.parse("${hostname}/timeline/getTimeline.php?userID=${user.userID}&searchDate=${date}");
     var response = await http.get(urlTimeline);
     // var response = await http.get(urlTimeline);
     setState(() {
