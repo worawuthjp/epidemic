@@ -76,7 +76,7 @@ class _RiskFormInfluenzaState extends State<RiskFormInfluenza> {
                     child: CircleAvatar(
                       radius: 27,
                       backgroundImage: NetworkImage(
-                          "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
+                          "${hostname}/signup/avataruser/$picture"),
                     ),
                   )
                 ],

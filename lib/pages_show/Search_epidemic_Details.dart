@@ -75,7 +75,7 @@ class SearchEpidemicDetails extends StatelessWidget {
                     elevation: 5,
                     margin: EdgeInsets.all(20),
                     child: Image.network(
-                      "http://172.20.10.8/epidemic/back/backend/epidemic_upload/$epidemicPic",
+                      "${host_back_url}/epidemic/back/backend/epidemic_upload/$epidemicPic",
                       fit: BoxFit.fill,
                     ),
                   ),

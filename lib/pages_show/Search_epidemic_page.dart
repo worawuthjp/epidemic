@@ -173,7 +173,7 @@ class SearchItems extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 27,
                       backgroundImage: NetworkImage(
-                          "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
+                          "${hostname}/signup/avataruser/$picture"),
                     ),
                   )
                 ],
@@ -218,7 +218,7 @@ class SearchItems extends StatelessWidget {
                             }));
                           },
                           child: Image.network(
-                            "http://172.20.10.8/epidemic/back/backend/epidemic_upload/${list[index]['epidemic_image']}",
+                            "${host_back_url}/epidemic/back/backend/epidemic_upload/${list[index]['epidemic_image']}",
                             fit: BoxFit.fill,
                           ),
                         ),

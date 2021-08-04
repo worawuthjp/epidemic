@@ -82,7 +82,7 @@ class ShowNewsDetails extends StatelessWidget {
                     elevation: 5,
                     margin: EdgeInsets.all(20),
                     child: Image.network(
-                      "http://172.20.10.8/epidemic/back/backend/upload/$picture",
+                      "${host_back_url}/epidemic/back/backend/upload/$picture",
                       fit: BoxFit.fill,
                     ),
                   ),

@@ -100,7 +100,7 @@ class News extends StatelessWidget {
                     child: InkWell(
                       child: Image.network(
                         //"http://172.20.10.8/covid/getNews/avataruser/${list[index]['news_image']}",
-                        "http://172.20.10.8/epidemic/back/backend/upload/${list[index]['news_image']}",
+                        "${host_back_url}/epidemic/back/backend/upload/${list[index]['news_image']}",
                         fit: BoxFit.fill,
                       ),
                       onTap: () {
