@@ -129,7 +129,11 @@ class _LocationPageState extends State<LocationPage> {
   Future<List<PlaceMap>> getPlaceNearbyUser(Position userLocation) async {
 
     int radius = 500;
-    var nearbyURL = Uri.parse("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${userLocation.latitude},${userLocation.longitude}&radius=${radius.toString()}&key=${placeAPI}");
+    var nearbyURL = Uri.parse("https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
+        "location=${userLocation.latitude},${userLocation.longitude}"
+        "&radius=${radius.toString()}"
+        "&key=${placeAPI}"
+    );
     var response = await http.get(nearbyURL);
     var data = json.decode(response.body);
 

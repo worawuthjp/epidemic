@@ -109,10 +109,19 @@ class _TimelinePageState extends State<TimelinePage> {
                       //       "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
                       //   backgroundColor: Colors.transparent,
                       // ),
-                      child: CircleAvatar(
+                      child: user.picture == null ?
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundColor: Colors.blue,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                      ) :
+                      CircleAvatar(
                         radius: 60,
                         backgroundImage: NetworkImage(
-                            "https://lotto.myminesite.com/signup/avataruser/${user.picture}"),
+                            "${hostname}/signup/avataruser/${user.picture}"),
                         backgroundColor: Colors.transparent,
                       ),
                     )
