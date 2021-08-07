@@ -269,14 +269,17 @@ class _CheckInPageState extends State<CheckInPage> {
               child: widget,
             ),
 
-            Text(
-              manageSpace(word),
-              style: GoogleFonts.kanit(
-                color: color,
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                manageSpace(word),
+                style: GoogleFonts.kanit(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             )
 
           ],

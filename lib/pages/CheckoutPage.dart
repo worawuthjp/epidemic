@@ -91,37 +91,57 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 child: Container(
                   margin: EdgeInsets.only(left: 16, top: 8, right: 16, bottom: 8),
                   child: Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(32),
-                        gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              Colors.red[900],
-                              Colors.red[600]
-                            ]
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 16),
+                          child: Text(
+                            "เช็คอินเมื่อ ${getTimeCheckIn(checkIn.timeCheckIn)} น.",
+                            style: GoogleFonts.kanit(
+                              color: Colors.lightBlue,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
                         ),
-                      ),
-                      child: Material(
-                        type: MaterialType.transparency,
-                        child: InkWell(
-                          onTap: (){
-                            flag = "verify";
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                            child: Text(
-                              "ออกจากสถานที่",
-                              style: GoogleFonts.kanit(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24
+
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(32),
+                            gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.bottomLeft,
+                                colors: [
+                                  Colors.red[900],
+                                  Colors.red[600]
+                                ]
+                            ),
+                          ),
+                          child: Material(
+                            type: MaterialType.transparency,
+                            child: InkWell(
+                              onTap: (){
+                                flag = "verify";
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                                child: Text(
+                                  "ออกจากสถานที่",
+                                  style: GoogleFonts.kanit(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+
+                      ],
                     ),
                   ),
                 )
@@ -230,6 +250,22 @@ class _CheckOutPageState extends State<CheckOutPage> {
         ),
       ),
     );
+  }
+
+  String verifyTime(int time ) {
+    String correctTime = "";
+    if(time < 10)
+      correctTime = "0" + time.toString();
+    else
+      correctTime = time.toString();
+    return correctTime;
+  }
+
+  String getTimeCheckIn(DateTime time) {
+    String timeHour = verifyTime(time.hour);
+    String timeMin = verifyTime(time.minute);
+    String timeCheckIn = timeHour + ":" + timeMin;
+    return timeCheckIn;
   }
 
   String manageSpace(String str){

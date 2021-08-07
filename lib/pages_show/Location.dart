@@ -68,7 +68,7 @@ class _LocationPageState extends State<LocationPage> {
                   default :
                     if (snapshotStream.hasError) {
                       return Center(
-                        child: Text("Error is occured"),
+                        child: Text("Error is occurred"),
                       );
                     }
                     CheckIn checkIn = snapshotStream.data;
