@@ -52,45 +52,81 @@ class _HomePageTwoState extends State<HomePageTwo> {
   //   return json.decode(response.body);
   // }
 
-  Future<void> getNews() async {
+  Future<TodayStatus> getNews() async {
     var url = Uri.parse(
         'https://covid19.th-stat.com/json/covid19v2/getTodayCases.json');
     var response = await http.get(url);
-    //print(response.body);
-    setState(() {
-      todayStatus = todayStatusFromJson(response.body);
-    });
+    TodayStatus todayStatus = todayStatusFromJson(response.body);
+    print(response.body);
+    return todayStatus;
   }
 
   @override
   void initState() {
     super.initState();
     getEmail();
-    getNews();
+    // getNews();
   }
 
   @override
   Widget build(BuildContext context) {
-    int confirmed = todayStatus.confirmed;
-    int newConfirmed = todayStatus.newConfirmed;
-    int recovered = todayStatus.recovered;
-    int newRecovered = todayStatus.newRecovered;
-    int hospitalized = todayStatus.hospitalized;
-    int newHospitalized = todayStatus.newHospitalized;
-    int deaths = todayStatus.deaths;
-    int newDeaths = todayStatus.newDeaths;
-    String updateDate = todayStatus.updateDate;
-    return Items(
-        user: user,
-        confirmed: confirmed,
-        newConfirmed: newConfirmed,
-        recovered: recovered,
-        newRecovered: newRecovered,
-        hospitalized: hospitalized,
-        newHospitalized: newHospitalized,
-        deaths: deaths,
-        newDeaths: newDeaths,
-        updateDate: updateDate);
+
+    // return Items(
+    //     user: user,
+    //     confirmed: confirmed,
+    //     newConfirmed: newConfirmed,
+    //     recovered: recovered,
+    //     newRecovered: newRecovered,
+    //     hospitalized: hospitalized,
+    //     newHospitalized: newHospitalized,
+    //     deaths: deaths,
+    //     newDeaths: newDeaths,
+    //     updateDate: updateDate);
+
+    return FutureBuilder(
+      future: getNews(),
+      builder: (context, snapshot) {
+          if(!snapshot.hasData){
+            return Center(child: CircularProgressIndicator(),);
+          }else{
+            if(snapshot.hasError) {
+              return Center(
+                child: Text(
+                  "Some Error is occurred",
+                  style: GoogleFonts.kanit(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24
+                  ),
+                ),
+              );
+            }else{
+              TodayStatus todayStatus = snapshot.data;
+              int confirmed = todayStatus.confirmed;
+              int newConfirmed = todayStatus.newConfirmed;
+              int recovered = todayStatus.recovered;
+              int newRecovered = todayStatus.newRecovered;
+              int hospitalized = todayStatus.hospitalized;
+              int newHospitalized = todayStatus.newHospitalized;
+              int deaths = todayStatus.deaths;
+              int newDeaths = todayStatus.newDeaths;
+              String updateDate = todayStatus.updateDate;
+              return Items(
+                user: user,
+                confirmed: confirmed,
+                newConfirmed: newConfirmed,
+                recovered: recovered,
+                newRecovered: newRecovered,
+                hospitalized: hospitalized,
+                newHospitalized: newHospitalized,
+                deaths: deaths,
+                newDeaths: newDeaths,
+                updateDate: updateDate,
+              );
+            }
+          }
+      },
+    );
   }
 }
 
@@ -168,6 +204,63 @@ class _ItemsState extends State<Items> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController search = TextEditingController();
 
+  Widget showStatusUser(User user){
+
+    Widget icons;
+    Color color;
+    switch(user.status){
+      case "มีความเสี่ยงสูง" :
+        color = Colors.red;
+        icons = Icon(Icons.mood_bad, color: Colors.white, size: 24,);
+        break;
+      case "เฝ้าระวัง":
+        color = Colors.yellow[800];
+        icons = Icon(Icons.mood_rounded, color: Colors.white, size: 24,);
+        break;
+      case "ไม่มีความเสี่ยง":
+        color = Colors.green;
+        icons = Icon(Icons.emoji_emotions_outlined, color: Colors.white, size: 24,);
+        break;
+    }
+
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 80),
+      decoration: BoxDecoration(
+        border: Border.all(color: color, width: 3),
+        borderRadius: BorderRadius.circular(8)
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              decoration: BoxDecoration(
+                  color: color
+              ),
+              child: icons
+          ),
+
+          Expanded(
+            child: Container(
+              child: Text(
+                user.status,
+                style: GoogleFonts.kanit(
+                  color: color,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          )
+
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -183,356 +276,363 @@ class _ItemsState extends State<Items> {
     String username = user.username;
     String email = user.email;
     String picture = user.picture;
+    String status = user.status;
 
     return Container(
       color: Colors.lightBlue[400],
       child: SafeArea(
         child: Scaffold(
-          body: Container(
-            child: Column(
-              children: [
-                ListTile(
-                  title: timeNow > 11 && timeNow <= 17
-                      ? Text(
-                    'Good Afternoon',
-                    style: GoogleFonts.kanit(
-                        fontSize: 25,
-                        //fontWeight: FontWeight.w600,
-                        color: Colors.lightBlue[300]),
-                  )
-                      : timeNow > 17 && timeNow <= 23
-                      ? Text(
-                    'Good Evening',
-                    style: GoogleFonts.kanit(
-                        fontSize: 25,
-                        //fontWeight: FontWeight.w600,
-                        color: Colors.lightBlue[300]),
-                  )
-                      : Text(
-                    'Good Morning',
-                    style: GoogleFonts.kanit(
-                        fontSize: 25,
-                        //fontWeight: FontWeight.w600,
-                        color: Colors.lightBlue[300]),
-                  ),
-                  subtitle: Text(
-                    username,
-                    style: GoogleFonts.kanit(
-                        fontSize: 40,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.lightBlue),
-                  ),
-                  trailing: Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.blue
+          body: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: [
+                  ListTile(
+                    title: timeNow > 11 && timeNow <= 17
+                        ? Text(
+                      'Good Afternoon',
+                      style: GoogleFonts.kanit(
+                          fontSize: 25,
+                          //fontWeight: FontWeight.w600,
+                          color: Colors.lightBlue[300]),
+                    )
+                        : timeNow > 17 && timeNow <= 23
+                        ? Text(
+                      'Good Evening',
+                      style: GoogleFonts.kanit(
+                          fontSize: 25,
+                          //fontWeight: FontWeight.w600,
+                          color: Colors.lightBlue[300]),
+                    )
+                        : Text(
+                      'Good Morning',
+                      style: GoogleFonts.kanit(
+                          fontSize: 25,
+                          //fontWeight: FontWeight.w600,
+                          color: Colors.lightBlue[300]),
                     ),
-                    // child: CircleAvatar(
-                    //   radius: 60,
-                    //   backgroundImage: NetworkImage(
-                    //       "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
-                    //   backgroundColor: Colors.transparent,
-                    // ),
-                    child: user.picture == null ?
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.blue,
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.white,
+                    subtitle: Text(
+                      username,
+                      style: GoogleFonts.kanit(
+                          fontSize: 40,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.lightBlue),
+                    ),
+                    trailing: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.blue
                       ),
-                    ) :
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundImage: NetworkImage(
-                          "${hostname}/signup/avataruser/${user.picture}"),
-                      backgroundColor: Colors.transparent,
-                    ),
-                  )
-                ),
-                Form(
-                  key: formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
-                    child: TextFormField(
-                      controller: search,
-                      decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          hintText: 'ค้นหาข้อมูลโรคระบาด',
-                          hintStyle: GoogleFonts.kanit(
-                              color: Color(0xffacacac), fontSize: 18),
-                          suffixIcon: IconButton(
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return SearchEpidemicPage(
-                                        username: username,
-                                        picture: picture,
-                                        search: search.text,
-                                        studentID: studentID,
-                                        // gender: gender,
-                                        // address: address,
-                                        // phone: phone,
-                                        // education: education,
-                                        // person: person,
-                                        // nameUser: name,
-                                        // profilePic: picture,
-                                      );
-                                    }));
-                              },
-                              icon: Icon(Icons.search),
-                              color: Color(0xffA2DAFF)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide(
-                                color: Colors.white,
-                              ))),
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(25, 0, 10, 0),
-                      child: Ink(
-                        decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15))),
-                        child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isVisibilityNews = !isVisibilityNews;
-                              isVisibilityStatus = !isVisibilityStatus;
-                            });
-                          },
-                          icon: Image.asset(
-                            'assets/images/news.png',
-                          ),
-                          iconSize: 50,
+                      // child: CircleAvatar(
+                      //   radius: 60,
+                      //   backgroundImage: NetworkImage(
+                      //       "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
+                      //   backgroundColor: Colors.transparent,
+                      // ),
+                      child: user.picture == null ?
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundColor: Colors.blue,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
-                      child: Ink(
-                        decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15))),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return VaccinePage(username, picture, studentID);
-                                }));
-                          },
-                          icon: Image.asset(
-                            'assets/images/vaccine.png',
-                          ),
-                          iconSize: 50,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
-                      child: Ink(
-                        decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15))),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return MapShow();
-                                }));
-                          },
-                          icon: Image.asset(
-                            'assets/images/hospital.png',
-                          ),
-                          iconSize: 50,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 0, 25, 0),
-                      child: Ink(
-                        decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15))),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (BuildContext context) {
-                                  return DataRisk(username, picture, studentID);
-                                }));
-                          },
-                          icon: Image.asset(
-                            'assets/images/risk.png',
-                          ),
-                          iconSize: 50,
-                        ),
+                      ) :
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundImage: NetworkImage(
+                            "${hostname}/signup/avataruser/${user.picture}"),
+                        backgroundColor: Colors.transparent,
                       ),
                     )
-                  ],
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(42, 4, 0, 0),
-                      child: Text('News',
-                          style: GoogleFonts.kanit(
-                              color: Colors.black54, fontSize: 13)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(53, 4, 0, 0),
-                      child: Text('Vaccine',
-                          style: GoogleFonts.kanit(
-                              color: Colors.black54, fontSize: 13)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(43, 4, 0, 0),
-                      child: Text('Hospital',
-                          style: GoogleFonts.kanit(
-                              color: Colors.black54, fontSize: 13)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(23, 5, 0, 0),
-                      child: Text('Risk Assignment',
-                          style: GoogleFonts.kanit(
-                              color: Colors.black54, fontSize: 12)),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Visibility(
-                  visible: isVisibilityNews,
-                  child: FutureBuilder<List>(
-                      future: getNews(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          print("error");
-                        }
-                        if (snapshot.hasData) {
-                          return News(
-                            list: snapshot.data,
-                            name: username,
-                            profilePic: picture,
-                          );
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      }),
-                ),
+                  ),
 
-                confirmed != null ?
-                Visibility(
-                    visible: isVisibilityStatus,
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                      child: Column(
-                        children: [
-                          ShowBox(
-                            width: double.infinity,
-                            height: 120,
-                            title: 'ติดเชื้อสะสม',
-                            text: 'ราย',
-                            total: confirmed,
-                            backgroundColor: Colors.redAccent.shade700,
-                            textSize: 10,
-                            titleSize: 20,
-                            titleHeight: 1.5,
-                            totalSize: 45,
-                            totalHeight: 1.35,
-                            newTotal: newConfirmed,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ShowBox(
-                                width: 120,
-                                height: 120,
-                                title: 'หายแล้ว',
-                                total: recovered,
-                                backgroundColor: Colors.greenAccent[700],
-                                titleSize: 20,
-                                titleHeight: 2,
-                                totalSize: 25,
-                                totalHeight: 1.75,
-                                newTotal: newRecovered,
-                              ),
-                              ShowBox(
-                                width: 120,
-                                height: 120,
-                                title: 'รักษาอยู่ใน รพ.',
-                                total: hospitalized,
-                                backgroundColor: Colors.lightBlue[400],
-                                titleSize: 16,
-                                titleHeight: 2.5,
-                                totalSize: 25,
-                                totalHeight: 1.75,
-                                newTotal: newHospitalized,
-                              ),
-                              ShowBox(
-                                width: 120,
-                                height: 120,
-                                title: 'เสียชีวิต',
-                                total: deaths,
-                                backgroundColor: Colors.grey[700],
-                                titleSize: 20,
-                                titleHeight: 2,
-                                totalSize: 25,
-                                totalHeight: 1.75,
-                                newTotal: newDeaths,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            padding: EdgeInsets.only(left: 250),
-                            // width: double.infinity,
-                            //height: 50,
-                            // decoration: BoxDecoration(
-                            // color: Colors.orange,
-                            // borderRadius: BorderRadius.circular(15)),
-                            child: Text(
-                              'วันที่อัพเดทผู้ติดเชื้อ' + '\n' + '$updateDate',
-                              style: GoogleFonts.kanit(
-                                  fontSize: 13,
-                                  // fontWeight: FontWeight.bold,
-                                  color: Colors.black87),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
+                  user.status != null ?
+                  showStatusUser(user): Container(),
+
+                  Form(
+                    key: formKey,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
+                      child: TextFormField(
+                        controller: search,
+                        decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            hintText: 'ค้นหาข้อมูลโรคระบาด',
+                            hintStyle: GoogleFonts.kanit(
+                                color: Color(0xffacacac), fontSize: 18),
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                        return SearchEpidemicPage(
+                                          username: username,
+                                          picture: picture,
+                                          search: search.text,
+                                          studentID: studentID,
+                                          // gender: gender,
+                                          // address: address,
+                                          // phone: phone,
+                                          // education: education,
+                                          // person: person,
+                                          // nameUser: name,
+                                          // profilePic: picture,
+                                        );
+                                      }));
+                                },
+                                icon: Icon(Icons.search),
+                                color: Color(0xffA2DAFF)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide(
+                                  color: Colors.white,
+                                ))),
                       ),
-                    )
-                )
-                :
-                Center(
-                  child: Text(
-                    "ไม่มีข้อมูล",
-                    style: GoogleFonts.kanit(
-                      color: Colors.blueGrey,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
                     ),
                   ),
-                )
-              ],
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(25, 0, 10, 0),
+                        child: Ink(
+                          decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15))),
+                          child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                isVisibilityNews = !isVisibilityNews;
+                                isVisibilityStatus = !isVisibilityStatus;
+                              });
+                            },
+                            icon: Image.asset(
+                              'assets/images/news.png',
+                            ),
+                            iconSize: 50,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
+                        child: Ink(
+                          decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15))),
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return VaccinePage(username, picture, studentID);
+                                  }));
+                            },
+                            icon: Image.asset(
+                              'assets/images/vaccine.png',
+                            ),
+                            iconSize: 50,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
+                        child: Ink(
+                          decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15))),
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return MapShow();
+                                  }));
+                            },
+                            icon: Image.asset(
+                              'assets/images/hospital.png',
+                            ),
+                            iconSize: 50,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 25, 0),
+                        child: Ink(
+                          decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15))),
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return DataRisk(username, picture, studentID);
+                                  }));
+                            },
+                            icon: Image.asset(
+                              'assets/images/risk.png',
+                            ),
+                            iconSize: 50,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(42, 4, 0, 0),
+                        child: Text('News',
+                            style: GoogleFonts.kanit(
+                                color: Colors.black54, fontSize: 13)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(53, 4, 0, 0),
+                        child: Text('Vaccine',
+                            style: GoogleFonts.kanit(
+                                color: Colors.black54, fontSize: 13)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(43, 4, 0, 0),
+                        child: Text('Hospital',
+                            style: GoogleFonts.kanit(
+                                color: Colors.black54, fontSize: 13)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(23, 5, 0, 0),
+                        child: Text('Risk Assignment',
+                            style: GoogleFonts.kanit(
+                                color: Colors.black54, fontSize: 12)),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Visibility(
+                    visible: isVisibilityNews,
+                    child: FutureBuilder<List>(
+                        future: getNews(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            print("error");
+                          }
+                          if (snapshot.hasData) {
+                            return News(
+                              list: snapshot.data,
+                              name: username,
+                              profilePic: picture,
+                            );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        }),
+                  ),
+
+                  confirmed != null ?
+                  Visibility(
+                      visible: isVisibilityStatus,
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                        child: Column(
+                          children: [
+                            ShowBox(
+                              width: double.infinity,
+                              height: 120,
+                              title: 'ติดเชื้อสะสม',
+                              text: 'ราย',
+                              total: confirmed,
+                              backgroundColor: Colors.redAccent.shade700,
+                              textSize: 10,
+                              titleSize: 20,
+                              titleHeight: 1.5,
+                              totalSize: 45,
+                              totalHeight: 1.35,
+                              newTotal: newConfirmed,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ShowBox(
+                                  width: 120,
+                                  height: 120,
+                                  title: 'หายแล้ว',
+                                  total: recovered,
+                                  backgroundColor: Colors.greenAccent[700],
+                                  titleSize: 20,
+                                  titleHeight: 2,
+                                  totalSize: 25,
+                                  totalHeight: 1.75,
+                                  newTotal: newRecovered,
+                                ),
+                                ShowBox(
+                                  width: 120,
+                                  height: 120,
+                                  title: 'รักษาอยู่ใน รพ.',
+                                  total: hospitalized,
+                                  backgroundColor: Colors.lightBlue[400],
+                                  titleSize: 16,
+                                  titleHeight: 2.5,
+                                  totalSize: 25,
+                                  totalHeight: 1.75,
+                                  newTotal: newHospitalized,
+                                ),
+                                ShowBox(
+                                  width: 120,
+                                  height: 120,
+                                  title: 'เสียชีวิต',
+                                  total: deaths,
+                                  backgroundColor: Colors.grey[700],
+                                  titleSize: 20,
+                                  titleHeight: 2,
+                                  totalSize: 25,
+                                  totalHeight: 1.75,
+                                  newTotal: newDeaths,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(left: 250),
+                              // width: double.infinity,
+                              //height: 50,
+                              // decoration: BoxDecoration(
+                              // color: Colors.orange,
+                              // borderRadius: BorderRadius.circular(15)),
+                              child: Text(
+                                'วันที่อัพเดทผู้ติดเชื้อ' + '\n' + '$updateDate',
+                                style: GoogleFonts.kanit(
+                                    fontSize: 13,
+                                    // fontWeight: FontWeight.bold,
+                                    color: Colors.black87),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                  )
+                  :
+                  Center(
+                    child: Text(
+                      "ไม่มีข้อมูล",
+                      style: GoogleFonts.kanit(
+                        color: Colors.blueGrey,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

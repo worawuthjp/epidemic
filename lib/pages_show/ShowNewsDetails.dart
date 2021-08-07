@@ -99,8 +99,8 @@ class ShowNewsDetails extends StatelessWidget {
           children: [
             IconButton(
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => HomePageTwo()));
+                // Navigator.of(context).push(
+                //     MaterialPageRoute(builder: (context) => HomePageTwo()));
               },
               icon: Icon(
                 Icons.home,

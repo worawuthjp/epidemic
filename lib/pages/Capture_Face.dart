@@ -12,6 +12,8 @@ import 'package:covidapp/pages/Form_Page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
 
 class CaptureFace extends StatefulWidget {
   String studentID;
@@ -117,6 +119,15 @@ class _CaptureFaceState extends State<CaptureFace> {
     setState(() {
       imgFile = File(image.path);
     });
+  }
+
+  Future<File> getImageFromAssets(String path) async {
+    final byteData = await rootBundle.load('assets/$path');
+
+    final file = File('${(await getTemporaryDirectory()).path}/$path');
+    await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+    return file;
   }
 
   Future register() async {

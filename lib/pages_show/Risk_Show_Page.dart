@@ -827,8 +827,8 @@ class _RiskShowPageState extends State<RiskShowPage> {
           children: [
             IconButton(
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => HomePageTwo()));
+                // Navigator.of(context).push(
+                //     MaterialPageRoute(builder: (context) => HomePageTwo()));
               },
               icon: Icon(
                 Icons.home,

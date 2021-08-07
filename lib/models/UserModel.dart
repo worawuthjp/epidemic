@@ -9,7 +9,8 @@ class User {
   String username;
   String email;
   String picture;
+  String status;
 
-  User({this.userID, this.fullName, this.faculty, this.department, this.tel, this.address, this.person, this.username, this.email, this.picture});
+  User({this.userID, this.fullName, this.faculty, this.department, this.tel, this.address, this.person, this.username, this.email, this.picture, this.status});
 
 }

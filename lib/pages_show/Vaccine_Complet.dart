@@ -212,8 +212,8 @@ class _ItemsState extends State<Items> {
               color: Color(0xffA2DAFF),
               onPressed: () {
                 print(list);
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => HomePageTwo()));
+                // Navigator.of(context).push(
+                //     MaterialPageRoute(builder: (context) => HomePageTwo()));
               },
               child: Text(
                 'ยืนยัน',
@@ -233,8 +233,8 @@ class _ItemsState extends State<Items> {
           children: [
             IconButton(
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => HomePageTwo()));
+                // Navigator.of(context).push(
+                //     MaterialPageRoute(builder: (context) => HomePageTwo()));
               },
               icon: Icon(
                 Icons.home,

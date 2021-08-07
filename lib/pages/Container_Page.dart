@@ -16,7 +16,7 @@ class _ContainerPageState extends State<ContainerPage> {
       child: Scaffold(
         body: TabBarView(children: [
           //HomePage(),
-          HomePageTwo(),
+          // HomePageTwo(),
           Container(color: Colors.yellowAccent),
           Container(color: Colors.orangeAccent),
           Container(color: Colors.redAccent)

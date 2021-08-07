@@ -46,23 +46,31 @@ class _TimelinePageState extends State<TimelinePage> {
     print("userID : " + user.userID);
     print("Start Selected Date : " + date);
     var urlTimeline = Uri.parse("${hostname}/timeline/getTimeline.php?userID=${user.userID}&searchDate=${date}");
-    var response = await http.get(urlTimeline);
+    // http.get(urlTimeline).then((response) {
+    //   if(mounted) {
+    //     timeline = timelineFromJson(response.body);
+    //   }
+    //   setState(() {});
+    //   if (timeline.message == "success") {
+    //     places = timeline.places;
+    //   }
+    //
+    //   print("Length of Place : " + timeline.places.length.toString());
+    //   for (var place in timeline.places) {
+    //     print("PlaceName of Places : " + place.placeName);
+    //   }
+    // });
     // var response = await http.get(urlTimeline);
-    setState(() {
-      timeline = timelineFromJson(response.body);
-    });
-
+    var response = await http.get(urlTimeline);
+    Timeline timeline = timelineFromJson(response.body);
     List<PlaceTimeline> places = [];
-
-    if (timeline.message == "success") {
+    if(timeline.message == "success"){
       places = timeline.places;
+      print("Length of Place : ${places}");
+      for (var place in places) {
+        print("PlaceName of Places : " + place.placeName);
+      }
     }
-
-    print("Length of Place : " + timeline.places.length.toString());
-    for (var place in timeline.places) {
-      print("PlaceName of Places : " + place.placeName);
-    }
-
     return places;
   }
 
@@ -99,16 +107,6 @@ class _TimelinePageState extends State<TimelinePage> {
                     trailing: Container(
                       width: 60,
                       height: 60,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.blue
-                      ),
-                      // child: CircleAvatar(
-                      //   radius: 60,
-                      //   backgroundImage: NetworkImage(
-                      //       "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
-                      //   backgroundColor: Colors.transparent,
-                      // ),
                       child: user.picture == null ?
                       CircleAvatar(
                         radius: 60,
@@ -204,8 +202,19 @@ class _TimelinePageState extends State<TimelinePage> {
                           return Center(child: CircularProgressIndicator(),);
                         }
                         else {
-
-                          if (snapshot.data.length == 0) {
+                          if(snapshot.hasError){
+                            return Center(
+                              child: Text(
+                                "Some error is occurred",
+                                style: GoogleFonts.kanit(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24
+                                )
+                              ),
+                            );
+                          }
+                          else if (snapshot.data.length == 0) {
                             return Center(
                               child: Text(
                                 "ไม่มีข้อมูลการเดินทาง",
@@ -218,12 +227,15 @@ class _TimelinePageState extends State<TimelinePage> {
                             );
                           }
                           else {
+                            List<PlaceTimeline> placeTimelineList = snapshot.data;
                             return ListView.builder(
-                                itemCount: snapshot.data.length,
+                                itemCount: placeTimelineList.length,
                                 itemBuilder: (context, index) {
+                                  PlaceTimeline placeTimeline = placeTimelineList[index];
                                   return Container(
                                     padding: EdgeInsets.all(8),
                                     child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
 
@@ -233,7 +245,7 @@ class _TimelinePageState extends State<TimelinePage> {
                                             child: Container(
                                               padding: EdgeInsets.all(8),
                                               child: Text(
-                                                timeLineFormat(snapshot.data[index]),
+                                                timeLineFormat(placeTimeline),
                                                 style: GoogleFonts.kanit(
                                                     color: Colors.blueGrey,
                                                     fontWeight: FontWeight.bold,
@@ -255,9 +267,6 @@ class _TimelinePageState extends State<TimelinePage> {
                                                 fontWeight: FontWeight.w300,
                                                 fontSize: 16,
                                               ),
-                                              textAlign: TextAlign.justify,
-                                              softWrap: false,
-                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),

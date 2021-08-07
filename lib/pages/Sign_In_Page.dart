@@ -33,7 +33,7 @@ class _SignInPageState extends State<SignInPage> {
     //     body: {"user_username": username.text, "user_password": password.text});
 
     var response = await http.post(urlLogin,
-        body: {"user_username": "Yokwcth", "user_password": "1234"});
+        body: {"user_username": username.text, "user_password": password.text});
 
     print(response.statusCode);
 
@@ -55,33 +55,30 @@ class _SignInPageState extends State<SignInPage> {
         String userID = data["userID"];
         var urlgetUser = Uri.parse("${hostname}/getdata/getuserdatabase.php?id=${userID}");
         response = await http.get(urlgetUser);
-        var userJson = json.decode(response.body);
-        print(userJson);
+        List userJson = json.decode(response.body);
+        print(userJson.first);
 
-        List<User> users = [];
+        Map<String, dynamic> userMap = userJson.first;
 
-        for(var u in userJson) {
           User user = User(
-              userID: u["user_studentID"],
-              fullName: u["user_fullname"],
-              faculty: u["user_faculty"],
-              department: u["user_department"],
-              tel: u["user_tel"],
-              address: u["user_address"],
-              person: u["user_person"],
-              username: u["user_username"],
-              email: u["user_email"],
-              picture: u["user_img"]
+              userID: userMap["user_studentID"],
+              fullName: userMap["user_fullname"],
+              faculty: userMap["user_faculty"],
+              department: userMap["user_department"],
+              tel: userMap["user_tel"],
+              address: userMap["user_address"],
+              person: userMap["user_person"],
+              username: userMap["user_username"],
+              email: userMap["user_email"],
+              picture: userMap["user_img"],
+              status: data["status"]
           );
 
-          users.add(user);
-        }
-
-        print(users[0].userID);
+        print("Username : => ${user.userID}");
 
         setState(() {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return HomePage(user: users[0],);
+            return HomePage(user: user,);
           }));
         });
       } else {
@@ -137,7 +134,7 @@ class _SignInPageState extends State<SignInPage> {
                   child: TextFormField(
                     controller: username,
                     autofocus: true,
-                    // validator: RequiredValidator(errorText: 'กรุณากรอกชื่อ '),
+                    validator: RequiredValidator(errorText: 'กรุณากรอกชื่อ '),
                     decoration: InputDecoration(
                       hintText: 'Username Or E-mail',
                       prefixIcon: Icon(Icons.account_circle_rounded),
@@ -153,7 +150,7 @@ class _SignInPageState extends State<SignInPage> {
                   child: TextFormField(
                     controller: password,
                     obscureText: isHiddenPassword,
-                    // validator: RequiredValidator(errorText: 'กรุณากรอกรหัสผ่าน '),
+                    validator: RequiredValidator(errorText: 'กรุณากรอกรหัสผ่าน '),
                     decoration: InputDecoration(
                       hintText: 'Password',
                       prefixIcon: Icon(Icons.lock),
