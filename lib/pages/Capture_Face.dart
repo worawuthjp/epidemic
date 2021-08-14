@@ -1,4 +1,5 @@
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:art_sweetalert/art_sweetalert.dart';
@@ -133,8 +134,10 @@ class _CaptureFaceState extends State<CaptureFace> {
   Future register() async {
     final uri = Uri.parse("${hostname}/signup/signup.php");
     var request = http.MultipartRequest('POST', uri);
-    var pic = await http.MultipartFile.fromPath("image", imgFile.path);
-    request.files.add(pic);
+    if (imgFile != null) {
+      var pic = await http.MultipartFile.fromPath("image", imgFile.path);
+      request.files.add(pic);
+    }
     request.fields['user_studentID'] = studentID;
     request.fields['user_fullname'] = fullname;
     request.fields['user_faculty'] = faculty;
@@ -146,24 +149,39 @@ class _CaptureFaceState extends State<CaptureFace> {
     request.fields['user_email'] = email;
     request.fields['user_password'] = password;
 
-    var response = await request.send();
+    // var response = await request.send();
 
-    if (response.statusCode == 200) {
-      print('Image Uploded');
+    http.Response response = await http.Response.fromStream(await request.send());
+    print("Result: ${response.statusCode}");
+    print("Response ${response.body}");
 
-      var response = await ArtSweetAlert.show(
-          context: context,
-          artDialogArgs: ArtDialogArgs(
-            type: ArtSweetAlertType.success,
-            title: "ลงทะเบียนเรียบร้อย",
-            text: "กรุณายืนยันรหัสผ่านในอีเมลล์"
-          )
-      );
+    var data = json.decode(response.body);
+
+    if (response.statusCode == 200 && data["isSent"]) {
+      print('Insert User info. & Can Sent E-mail');
+      bool isSendEmail = true;
+        ArtSweetAlert.show(
+            context: context,
+            artDialogArgs: ArtDialogArgs(
+                type: ArtSweetAlertType.success,
+                title: "ลงทะเบียนเรียบร้อย",
+                text: "กรุณายืนยันรหัสผ่านในอีเมลล์"
+            )
+        );
 
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => SignInPage()));
-    } else {
-      print('Image Not Uploded');
+    }
+    else {
+      print('Not Insert User Info.');
+      ArtSweetAlert.show(
+        context: context,
+        artDialogArgs: ArtDialogArgs(
+        type: ArtSweetAlertType.danger,
+        title: "ลงทะเบียนไม่สำเร็จ",
+        text: "กรุณาลองอีกครั้ง"
+        )
+      );
     }
   }
 

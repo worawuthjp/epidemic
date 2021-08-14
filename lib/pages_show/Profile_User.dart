@@ -1,5 +1,7 @@
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:covidapp/constants.dart';
 import 'package:covidapp/main.dart';
+import 'package:covidapp/models/UserModel.dart';
 import 'package:covidapp/pages/EditProfile.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileUser extends StatefulWidget {
+  User user;
   String picture;
   String fullname;
   String studentID;
@@ -18,8 +21,9 @@ class ProfileUser extends StatefulWidget {
   String address;
   String person;
 
-  ProfileUser(String fullname, String picture, String studentID, String faculty,
+  ProfileUser(User user, String fullname, String picture, String studentID, String faculty,
       String department, String tel, String address, String person) {
+    this.user = user;
     this.fullname = fullname;
     this.picture = picture;
     this.studentID = studentID;
@@ -32,10 +36,11 @@ class ProfileUser extends StatefulWidget {
 
   @override
   _ProfileUserState createState() => _ProfileUserState(
-      fullname, picture, studentID, faculty, department, tel, address, person);
+      user, fullname, picture, studentID, faculty, department, tel, address, person);
 }
 
 class _ProfileUserState extends State<ProfileUser> {
+  User user;
   String picture;
   String fullname;
   String studentID;
@@ -46,6 +51,7 @@ class _ProfileUserState extends State<ProfileUser> {
   String person;
 
   _ProfileUserState(
+      User user,
       String fullname,
       String picture,
       String studentID,
@@ -54,6 +60,7 @@ class _ProfileUserState extends State<ProfileUser> {
       String tel,
       String address,
       String person) {
+    this.user = user;
     this.fullname = fullname;
     this.picture = picture;
     this.studentID = studentID;
@@ -81,7 +88,7 @@ class _ProfileUserState extends State<ProfileUser> {
             print("Error");
           }
           if (snapshot.hasData) {
-            return Items(fullname, picture, studentID, faculty, department, tel,
+            return Items(user, fullname, picture, studentID, faculty, department, tel,
                 address, person, snapshot.data);
           } else {
             return Center(
@@ -95,6 +102,7 @@ class _ProfileUserState extends State<ProfileUser> {
 }
 
 class Items extends StatefulWidget {
+  User user;
   List list;
   String picture;
   String fullname;
@@ -105,8 +113,9 @@ class Items extends StatefulWidget {
   String address;
   String person;
 
-  Items(String fullname, String picture, String studentID, String faculty,
+  Items(User user, String fullname, String picture, String studentID, String faculty,
       String department, String tel, String address, String person, List list) {
+    this.user = user;
     this.fullname = fullname;
     this.picture = picture;
     this.studentID = studentID;
@@ -119,11 +128,12 @@ class Items extends StatefulWidget {
   }
 
   @override
-  _ItemsState createState() => _ItemsState(fullname, picture, studentID,
+  _ItemsState createState() => _ItemsState(user, fullname, picture, studentID,
       faculty, department, tel, address, person, list);
 }
 
 class _ItemsState extends State<Items> {
+  User user;
   List list;
   String picture;
   String fullname;
@@ -134,8 +144,9 @@ class _ItemsState extends State<Items> {
   String address;
   String person;
 
-  _ItemsState(String fullname, String picture, String studentID, String faculty,
+  _ItemsState(User user, String fullname, String picture, String studentID, String faculty,
       String department, String tel, String address, String person, List list) {
+    this.user = user;
     this.fullname = fullname;
     this.picture = picture;
     this.studentID = studentID;
@@ -416,7 +427,32 @@ class _ItemsState extends State<Items> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 5,
+              ),
+
+              Container(
+                height: 42,
+                width: 240,
+                child: TextButton(
+                    onPressed: () {
+                      onTapChangedPassword(user);
+                    },
+                    child: Center(
+                      child: Text(
+                        "เปลี่ยนรหัสผ่าน",
+                        style: GoogleFonts.kanit(
+                          color: Colors.red,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline
+                        ),
+                      ),
+                    ),
+                ),
+              ),
+
+              SizedBox(
+                height: 5,
               ),
               Container(
                 height: 42,
@@ -489,5 +525,34 @@ class _ItemsState extends State<Items> {
         ),
       ),
     );
+  }
+
+  Future<void> onTapChangedPassword(User user) async {
+    
+    var uri = Uri.parse("${hostname}/reset-password/index.php?userID=${user.userID}");
+    var response = await http.get(uri);
+    var data = json.decode(response.body);
+
+    bool isSendEmail = data["isSent"];
+
+    if(isSendEmail){
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+              type: ArtSweetAlertType.success,
+              title: "รีเซตเรียบร้อย",
+              text: "โปรดเปลี่ยนรหัสผ่านในอีเมลล์"
+          )
+      );
+    }
+    else{
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+              type: ArtSweetAlertType.danger,
+              title: "ไม่สามารถรีเซ็ตได้",
+          )
+      );
+    }
   }
 }

@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
       case 3:
         print("Select Page : ProfileUser");
         return ProfileUser(
+            user,
             user.fullName,
             user.picture,
             user.userID,

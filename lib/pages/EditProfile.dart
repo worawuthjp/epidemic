@@ -247,19 +247,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 width: 240,
                 child: RaisedButton.icon(
                   onPressed: () {
-                    editUserData();
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return ProfileUser(
-                          userfullname.text,
-                          picture,
-                          userstudentID.text,
-                          userfaculty.text,
-                          userdepartment.text,
-                          usertel.text,
-                          useraddress.text,
-                          userperson.text);
-                    }));
+                    // editUserData();
+                    // Navigator.of(context).push(
+                    //     MaterialPageRoute(builder: (BuildContext context) {
+                    //   return ProfileUser(
+                    //
+                    //       userfullname.text,
+                    //       picture,
+                    //       userstudentID.text,
+                    //       userfaculty.text,
+                    //       userdepartment.text,
+                    //       usertel.text,
+                    //       useraddress.text,
+                    //       userperson.text);
+                    // }));
                   },
                   icon: Icon(
                     Icons.check,

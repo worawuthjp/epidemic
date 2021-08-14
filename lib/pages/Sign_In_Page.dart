@@ -36,7 +36,7 @@ class _SignInPageState extends State<SignInPage> {
         body: {"user_username": username.text, "user_password": password.text});
 
     print(response.statusCode);
-
+    Map<String , dynamic> data = json.decode(response.body);
     if (response.statusCode != 200) {
       ArtSweetAlert.show(
           context: context,
@@ -47,7 +47,6 @@ class _SignInPageState extends State<SignInPage> {
           ));
     }
     else {
-      Map<String , dynamic> data = json.decode(response.body);
       if (data["msg"] != "error") {
         // SharedPreferences preferences = await SharedPreferences.getInstance();
         // preferences.setString('userID', data["userID"]);
@@ -87,7 +86,7 @@ class _SignInPageState extends State<SignInPage> {
             artDialogArgs: ArtDialogArgs(
               type: ArtSweetAlertType.warning,
               title: "ไม่สามารถเข้าสู่ระบบได้",
-              text: "โปรดตรวจสอบความถูกต้องของ \n username และ password ของท่าน",
+              text: "โปรดตรวจสอบรหัสผ่าน หรือ อีเมลล์ของท่าน",
             ));
       }
     }
