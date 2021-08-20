@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 import 'package:art_sweetalert/art_sweetalert.dart';
+import 'package:covidapp/models/Nearby.dart';
 import 'package:covidapp/models/UserModel.dart';
-import 'package:covidapp/models/map/PlaceMap.dart';
+import 'package:covidapp/service/place_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
 import '../constants.dart';
 
 class CheckInPage extends StatefulWidget {
@@ -22,28 +24,51 @@ class CheckInPage extends StatefulWidget {
 }
 
 class _CheckInPageState extends State<CheckInPage> {
+  
+  FlutterLocalNotificationsPlugin localNotification = FlutterLocalNotificationsPlugin();
 
   _CheckInPageState({this.user});
   User user;
   bool isLoading = false;
   int flag = 0;
-  List<PlaceMap> placeList;
-  PlaceMap placeSelect;
+  List<Nearby> placeList;
+  Nearby placeSelect;
 
-  // Future<Position> getUserPosition() async{
-  //
-  //   Position userLocation;
-  //   try {
-  //     userLocation = await Geolocator.getCurrentPosition(
-  //         desiredAccuracy: LocationAccuracy.high);
-  //   } catch (e) {
-  //     userLocation = null;
-  //   }
-  //
-  //   print("userLocation: ${userLocation.latitude} , ${userLocation.longitude}");
-  //   return userLocation;
-  // }
+  @override
+  void initState() {
+    initialize();
+    super.initState();
+  }
 
+  Future initialize() async {
+    var androidInitialize = AndroidInitializationSettings('ic_launcher');
+    var iOSInitialize = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
+        android: androidInitialize, iOS: iOSInitialize);
+    await localNotification.initialize(initializationSettings);
+  }
+
+  sendNotification() async {
+    var androidDetails = AndroidNotificationDetails('channelId',
+        'Local Notification', 'This is the description of the Notification, you can write anything',
+    color: Colors.blue,
+    enableLights: true,
+    enableVibration: true,
+    largeIcon: DrawableResourceAndroidBitmap('ic_launcher'),
+    styleInformation: MediaStyleInformation(
+      htmlFormatContent: true, htmlFormatTitle: true
+    ),
+    importance: Importance.max);
+
+    var iOSDetails = IOSNotificationDetails();
+
+    var generalNotificationDetails = NotificationDetails(
+      android: androidDetails, iOS: iOSDetails);
+
+    await localNotification.show(0, "สถานะการเช็คอิน",
+        'คุณอยู่ในพื้นที่เสี่ยง โปรดกักตัว 14 วัน', generalNotificationDetails);
+  }
+  
   Future<LatLng> getUserLocation() async{
 
     bool _serviceEnabled;
@@ -68,7 +93,7 @@ class _CheckInPageState extends State<CheckInPage> {
     return LatLng(_locationData.latitude, _locationData.longitude);
   }
 
-  Future<List<PlaceMap>> getPlaceNearbyUser(LatLng latLng) async {
+  Future<List<Nearby>> getPlaceNearbyUser(LatLng latLng) async {
     int radius = 500;
     var nearbyURL = Uri.parse(
         "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"
@@ -76,15 +101,15 @@ class _CheckInPageState extends State<CheckInPage> {
             "&radius=${radius.toString()}"
             "&key=${placeAPI}"
     );
-    List<PlaceMap> placeList = [];
+    List<Nearby> placeList = [];
     var response = await http.get(nearbyURL);
     var data = json.decode(response.body);
     print(data["status"]);
     if (data["status"] == "OK") {
       List<String> placeName = [];
       for (var position in data["results"]) {
-        PlaceMap place = placeMapFromJson(position);
-        placeName.add(place.placeName);
+        Nearby place = Nearby.fromJson(position);
+        placeName.add(place.name);
         placeList.add(place);
       }
       print("Place in ${radius} meters is : ${placeName}");
@@ -93,9 +118,9 @@ class _CheckInPageState extends State<CheckInPage> {
     return placeList;
   }
 
-  Future<List<PlaceMap>> _getHandlePlaceNearby() async{
+  Future<List<Nearby>> _getHandlePlaceNearby() async{
     LatLng userLocation = await getUserLocation();
-    List<PlaceMap> placeMapList = await getPlaceNearbyUser(userLocation);
+    List<Nearby> placeMapList = await getPlaceNearbyUser(userLocation);
     return placeMapList;
   }
 
@@ -139,6 +164,9 @@ class _CheckInPageState extends State<CheckInPage> {
 
     var uri = Uri.parse("${hostname}/timeline/checkin.php") ;
 
+    print("Location: ${placeName}");
+    print("PlaceID: ${placeID}");
+
     var response = await http.post(uri, body: {
       "userID" : userID,
       "lat" : latLng.latitude.toString(),
@@ -154,10 +182,13 @@ class _CheckInPageState extends State<CheckInPage> {
     print("Check-in : message => " + message);
     print("Check-in : isRisk => ${isRisk.toString()}");
 
+    sendNotification();
+    await Future.delayed(Duration(seconds: 1));
+
     return isRisk;
   }
 
-  Widget detailCheckInPage(PlaceMap placeMap){
+  Widget detailCheckInPage(Nearby placeMap){
     return placeMap != null?
         Center(
           child: Container(
@@ -169,7 +200,7 @@ class _CheckInPageState extends State<CheckInPage> {
                 Expanded(
                   flex: 2,
                     child: Text(
-                      manageSpace(placeSelect.placeName),
+                      manageSpace(placeSelect.name),
                       style: GoogleFonts.kanit(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -182,7 +213,7 @@ class _CheckInPageState extends State<CheckInPage> {
                 Expanded(
                   flex: 3,
                     child: FutureBuilder(
-                      future: checkin(user.userID, placeMap.location, placeMap.placeName, placeMap.placeID),
+                      future: checkin(user.userID, LatLng(placeMap.geometry.location.lat, placeMap.geometry.location.lng), placeMap.name, placeMap.name),
                       builder: (context, snapshotCheckIn) {
                         if (!snapshotCheckIn.hasData){
                           return statusCheckIn("Loading");
@@ -380,10 +411,10 @@ class _CheckInPageState extends State<CheckInPage> {
                       }
                       else {
                         if (snapshotFuture.hasError) {
-                          return Center(child: Text("Some error is occured."),);
+                          return Center(child: Text("Some error is occurred."),);
                         }
                         else {
-                          List<PlaceMap> placeMapList = snapshotFuture.data;
+                          List<Nearby> placeMapList = snapshotFuture.data;
                           if(placeMapList.length == 0) {
                             return Center(
                               child: Text(
@@ -404,7 +435,7 @@ class _CheckInPageState extends State<CheckInPage> {
                             child: ListView.builder(
                               itemCount: placeMapList.length,
                               itemBuilder: (context, index) {
-                                PlaceMap place = placeMapList[index];
+                                Nearby place = placeMapList[index];
                                 return Container(
                                   margin: EdgeInsets.only(
                                       top: index == 0 ? 0 : 8,
@@ -427,7 +458,7 @@ class _CheckInPageState extends State<CheckInPage> {
                                       onTap: (){
                                         placeSelect = place;
                                         ++flag;
-                                        print(placeSelect.placeName);
+                                        print(placeSelect.name);
                                       },
                                       child: Padding(
                                           padding: EdgeInsets.symmetric(
@@ -445,7 +476,7 @@ class _CheckInPageState extends State<CheckInPage> {
                                                         children: [
 
                                                           Text(
-                                                            manageSpace(place.placeName),
+                                                            manageSpace(place.name),
                                                             style: GoogleFonts.kanit(
                                                               fontSize: 24,
                                                               fontWeight: FontWeight.bold,
@@ -458,7 +489,7 @@ class _CheckInPageState extends State<CheckInPage> {
                                                           Padding(
                                                             padding: EdgeInsets.symmetric(vertical: 8),
                                                             child: Text(
-                                                              manageSpace(place.placeAddress),
+                                                              manageSpace(place.vicinity),
                                                               style: GoogleFonts.kanit(
                                                                   fontSize: 14,
                                                                   color: Colors.white
@@ -508,7 +539,8 @@ class _CheckInPageState extends State<CheckInPage> {
                     }
                   )
                 )
-            )
+            ),
+
           ],
         ),
     );

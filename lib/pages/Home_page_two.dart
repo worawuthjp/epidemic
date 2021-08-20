@@ -1,7 +1,7 @@
 import 'package:covidapp/Show_Box.dart';
 import 'package:covidapp/constants.dart';
 import 'package:covidapp/models/UserModel.dart';
-import 'package:covidapp/pages/MapShow.dart';
+import 'package:covidapp/pages/Hospital.dart';
 import 'package:covidapp/pages/Timeline.dart';
 import 'package:covidapp/pages_show/Profile_User.dart';
 import 'package:covidapp/pages_show/Search_epidemic_page.dart';
@@ -449,7 +449,7 @@ class _ItemsState extends State<Items> {
                             onPressed: () {
                               Navigator.push(context, MaterialPageRoute(
                                   builder: (BuildContext context) {
-                                    return MapShow();
+                                    return Hospital();
                                   }));
                             },
                             icon: Image.asset(

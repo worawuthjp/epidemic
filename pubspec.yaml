@@ -43,6 +43,7 @@ dependencies:
   flutter_datetime_picker: ^1.5.1
   location: any
   path_provider: any
+  flutter_local_notifications: any
 
 
 
