@@ -182,8 +182,10 @@ class _CheckInPageState extends State<CheckInPage> {
     print("Check-in : message => " + message);
     print("Check-in : isRisk => ${isRisk.toString()}");
 
-    sendNotification();
-    await Future.delayed(Duration(seconds: 1));
+    if (isRisk){
+      sendNotification();
+      await Future.delayed(Duration(seconds: 1));
+    }
 
     return isRisk;
   }
