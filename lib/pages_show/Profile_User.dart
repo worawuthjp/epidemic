@@ -11,67 +11,23 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileUser extends StatefulWidget {
-  User user;
-  String picture;
-  String fullname;
-  String studentID;
-  String faculty;
-  String department;
-  String tel;
-  String address;
-  String person;
+  final User user;
 
-  ProfileUser(User user, String fullname, String picture, String studentID, String faculty,
-      String department, String tel, String address, String person) {
-    this.user = user;
-    this.fullname = fullname;
-    this.picture = picture;
-    this.studentID = studentID;
-    this.faculty = faculty;
-    this.department = department;
-    this.tel = tel;
-    this.address = address;
-    this.person = person;
-  }
+  const ProfileUser({Key key,@required this.user}) : super(key: key);
 
   @override
-  _ProfileUserState createState() => _ProfileUserState(
-      user, fullname, picture, studentID, faculty, department, tel, address, person);
+  _ProfileUserState createState() => _ProfileUserState(user: user);
 }
 
 class _ProfileUserState extends State<ProfileUser> {
-  User user;
-  String picture;
-  String fullname;
-  String studentID;
-  String faculty;
-  String department;
-  String tel;
-  String address;
-  String person;
 
-  _ProfileUserState(
-      User user,
-      String fullname,
-      String picture,
-      String studentID,
-      String faculty,
-      String department,
-      String tel,
-      String address,
-      String person) {
-    this.user = user;
-    this.fullname = fullname;
-    this.picture = picture;
-    this.studentID = studentID;
-    this.faculty = faculty;
-    this.department = department;
-    this.tel = tel;
-    this.address = address;
-    this.person = person;
-  }
+  User user;
+  User userEdit;
+
+  _ProfileUserState({this.user});
 
   Future<List> getData() async {
+    String studentID = user.userID;
     var url = Uri.parse(
         "${hostname}/vaccine/getVaccine.php?id=$studentID");
     var response = await http.get(url);
@@ -88,8 +44,10 @@ class _ProfileUserState extends State<ProfileUser> {
             print("Error");
           }
           if (snapshot.hasData) {
-            return Items(user, fullname, picture, studentID, faculty, department, tel,
-                address, person, snapshot.data);
+            List data = snapshot.data;
+            return (userEdit == null)
+            ? profileWidget(user, data)
+            : profileWidget(userEdit, data);
           } else {
             return Center(
               child: CircularProgressIndicator(),
@@ -99,85 +57,21 @@ class _ProfileUserState extends State<ProfileUser> {
       ),
     );
   }
-}
 
-class Items extends StatefulWidget {
-  User user;
-  List list;
-  String picture;
-  String fullname;
-  String studentID;
-  String faculty;
-  String department;
-  String tel;
-  String address;
-  String person;
+  Widget profileWidget(User user, List detailVaccine) {
+    List list = detailVaccine;
+    String picture = user.picture;
+    String fullname = user.fullName;
+    String studentID = user.userID;
+    String faculty = user.faculty;
+    String department = user.department;
+    String tel = user.tel;
+    String address = user.address;
+    String person = user.person;
 
-  Items(User user, String fullname, String picture, String studentID, String faculty,
-      String department, String tel, String address, String person, List list) {
-    this.user = user;
-    this.fullname = fullname;
-    this.picture = picture;
-    this.studentID = studentID;
-    this.faculty = faculty;
-    this.department = department;
-    this.tel = tel;
-    this.address = address;
-    this.person = person;
-    this.list = list;
-  }
-
-  @override
-  _ItemsState createState() => _ItemsState(user, fullname, picture, studentID,
-      faculty, department, tel, address, person, list);
-}
-
-class _ItemsState extends State<Items> {
-  User user;
-  List list;
-  String picture;
-  String fullname;
-  String studentID;
-  String faculty;
-  String department;
-  String tel;
-  String address;
-  String person;
-
-  _ItemsState(User user, String fullname, String picture, String studentID, String faculty,
-      String department, String tel, String address, String person, List list) {
-    this.user = user;
-    this.fullname = fullname;
-    this.picture = picture;
-    this.studentID = studentID;
-    this.faculty = faculty;
-    this.department = department;
-    this.tel = tel;
-    this.address = address;
-    this.person = person;
-    this.list = list;
-  }
-
-  Future<Null> logout() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.clear();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey[200],
-        // appBar: AppBar(
-        //   leading: IconButton(
-        //     icon: Icon(Icons.arrow_back_ios, color: Colors.black, size: 30),
-        //     onPressed: () {
-        //       Navigator.pop(context);
-        //     },
-        //   ),
-        //   backgroundColor: Colors.grey[200],
-        //   elevation: 0,
-        // ),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -189,7 +83,7 @@ class _ItemsState extends State<Items> {
                 children: [
                   Padding(padding: EdgeInsets.only(left: 50)),
                   Text(
-                    'Proflie',
+                    'Profile',
                     style: GoogleFonts.kanit(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
@@ -215,7 +109,7 @@ class _ItemsState extends State<Items> {
                   alignment: Alignment.topCenter,
                   children: [
                     Container(
-                        // width: 341,
+                      // width: 341,
                         height: 370,
                         margin: EdgeInsets.all(10),
                         decoration: BoxDecoration(
@@ -393,31 +287,31 @@ class _ItemsState extends State<Items> {
                               ),
                               list.isEmpty
                                   ? Text(
-                                      "กรุณาแสดงผลการฉีดวัคซีน",
-                                      style: GoogleFonts.kanit(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xffFF0000)),
-                                    )
+                                "กรุณาแสดงผลการฉีดวัคซีน",
+                                style: GoogleFonts.kanit(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xffFF0000)),
+                              )
                                   : list[0]['user_status'] == "อนุมัติ" ||
-                                          list[0]['user_status'] == "ยืนยัน"
-                                      ? Text(
-                                          'ได้รับการยืนยันแล้ว',
-                                          style: GoogleFonts.kanit(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Color(0xff38FD07)),
-                                        )
-                                      : list[0]['user_status'] == "No" ||
-                                              list[0]['user_status'] == "no"
-                                          ? Text(
-                                              "ยังไม่ได้รับการยืนยัน",
-                                              style: GoogleFonts.kanit(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color(0xffFF0000)),
-                                            )
-                                          : Text('')
+                                  list[0]['user_status'] == "ยืนยัน"
+                                  ? Text(
+                                'ได้รับการยืนยันแล้ว',
+                                style: GoogleFonts.kanit(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xff38FD07)),
+                              )
+                                  : list[0]['user_status'] == "No" ||
+                                  list[0]['user_status'] == "no"
+                                  ? Text(
+                                "ยังไม่ได้รับการยืนยัน",
+                                style: GoogleFonts.kanit(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xffFF0000)),
+                              )
+                                  : Text('')
                             ],
                           ),
                         )
@@ -434,20 +328,20 @@ class _ItemsState extends State<Items> {
                 height: 42,
                 width: 240,
                 child: TextButton(
-                    onPressed: () {
-                      onTapChangedPassword(user);
-                    },
-                    child: Center(
-                      child: Text(
-                        "เปลี่ยนรหัสผ่าน",
-                        style: GoogleFonts.kanit(
+                  onPressed: () {
+                    onTapChangedPassword(user);
+                  },
+                  child: Center(
+                    child: Text(
+                      "เปลี่ยนรหัสผ่าน",
+                      style: GoogleFonts.kanit(
                           color: Colors.red,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline
-                        ),
                       ),
                     ),
+                  ),
                 ),
               ),
 
@@ -458,20 +352,12 @@ class _ItemsState extends State<Items> {
                 height: 42,
                 width: 240,
                 child: RaisedButton.icon(
-                  onPressed: () {
-                    Navigator.push(context,
+                  onPressed: () async{
+                    userEdit = await Navigator.push(context,
                         MaterialPageRoute(builder: (BuildContext context) {
-                      return EditProfilePage(
-                        picture: picture,
-                        fullname: fullname,
-                        studentID: studentID,
-                        faculty: faculty,
-                        department: department,
-                        tel: tel,
-                        address: address,
-                        person: person,
-                      );
-                    }));
+                          return EditProfilePage(user: user);
+                        }));
+                    setState(() {});
                   },
                   icon: Icon(
                     Icons.edit,
@@ -498,10 +384,7 @@ class _ItemsState extends State<Items> {
                 child: RaisedButton.icon(
                   onPressed: () {
                     logout();
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return MyApp();
-                    }));
+                    Navigator.pop(context);
                   },
                   icon: Icon(
                     Icons.logout,
@@ -527,8 +410,13 @@ class _ItemsState extends State<Items> {
     );
   }
 
+  Future<Null> logout() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.clear();
+  }
+
   Future<void> onTapChangedPassword(User user) async {
-    
+
     var uri = Uri.parse("${hostname}/reset-password/index.php?userID=${user.userID}");
     var response = await http.get(uri);
     var data = json.decode(response.body);
@@ -549,10 +437,11 @@ class _ItemsState extends State<Items> {
       ArtSweetAlert.show(
           context: context,
           artDialogArgs: ArtDialogArgs(
-              type: ArtSweetAlertType.danger,
-              title: "ไม่สามารถรีเซ็ตได้",
+            type: ArtSweetAlertType.danger,
+            title: "ไม่สามารถรีเซ็ตได้",
           )
       );
     }
   }
+
 }

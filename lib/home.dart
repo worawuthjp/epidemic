@@ -3,28 +3,37 @@ import 'package:covidapp/pages/Home_page_two.dart';
 import 'package:covidapp/pages/Timeline.dart';
 import 'package:covidapp/pages_show/Location.dart';
 import 'package:covidapp/pages_show/Profile_User.dart';
+import 'package:covidapp/service/user_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
 
-  final User user;
 
-  const HomePage({Key key,@required this.user}) : super(key: key);
+  final String userID;
+  final String userStatus;
+
+  const HomePage({
+    Key key,
+    @required this.userID,
+    @required this.userStatus }) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState(user: user);
+  _HomePageState createState() => _HomePageState(userID: userID, userStatus: userStatus);
 }
 
 class _HomePageState extends State<HomePage> {
 
-  _HomePageState({this.user});
+  _HomePageState({this.userID, this.userStatus});
 
-  User user;
+  String userID;
+  String userStatus;
+
   int _currentIndex = 0;
 
-  Widget getPage(int index) {
+  Widget getPage(int index, User user) {
     switch (index) {
       case 0:
         print("Select Page : HomePageTwo");
@@ -40,16 +49,7 @@ class _HomePageState extends State<HomePage> {
         break;
       case 3:
         print("Select Page : ProfileUser");
-        return ProfileUser(
-            user,
-            user.fullName,
-            user.picture,
-            user.userID,
-            user.faculty,
-            user.department,
-            user.tel,
-            user.address,
-            user.person);
+        return ProfileUser(user: user);
         break;
     }
   }
@@ -63,45 +63,67 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    print("initState -> Username is : " + user.username);
+    print("initState -> Username is : " + userID);
+  }
+
+  Stream<User> getUserDetail(String userID, String status) async*{
+    User user = await UserService().getUserDetail(userID, status);
+    yield user;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: getPage(_currentIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: onTappedBar,
-        currentIndex: _currentIndex,
-        backgroundColor: Colors.lightBlue[400],
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              // backgroundColor: Color(0xffA2DAFF),
-              backgroundColor: Colors.lightBlue[400],
-              title: _currentIndex == 0 ? Text(
-                'Home', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.location_on),
-              backgroundColor: Colors.lightBlue[400],
-              title: _currentIndex == 1 ? Text(
-                'Check in', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              backgroundColor: Colors.lightBlue[400],
-              title: _currentIndex == 2 ? Text(
-                'TimeLine', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              backgroundColor: Colors.lightBlue[400],
-              title: _currentIndex == 3 ? Text(
-                'Profile', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
-          ),
-        ],
-      ),
-    );
+    return StreamBuilder(
+      stream: getUserDetail(userID, userStatus),
+      builder: (context, snapshot){
+        switch(snapshot.connectionState){
+          case ConnectionState.waiting:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          default:
+            if (snapshot.hasError) {
+              return Center(
+                child: Text("Some error is Occurred."),
+              );
+            }
+            User user = snapshot.data;
+            return Scaffold(
+              body: getPage(_currentIndex, user),
+              bottomNavigationBar: BottomNavigationBar(
+                onTap: onTappedBar,
+                currentIndex: _currentIndex,
+                backgroundColor: Colors.lightBlue[400],
+                items: [
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.home),
+                      // backgroundColor: Color(0xffA2DAFF),
+                      backgroundColor: Colors.lightBlue[400],
+                      title: _currentIndex == 0 ? Text(
+                        'Home', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
+                  ),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.location_on),
+                      backgroundColor: Colors.lightBlue[400],
+                      title: _currentIndex == 1 ? Text(
+                        'Check in', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
+                  ),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.history),
+                      backgroundColor: Colors.lightBlue[400],
+                      title: _currentIndex == 2 ? Text(
+                        'TimeLine', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
+                  ),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.person),
+                      backgroundColor: Colors.lightBlue[400],
+                      title: _currentIndex == 3 ? Text(
+                        'Profile', style: GoogleFonts.kanit(fontSize: 16),) : Text('')
+                  ),
+                ],
+              ),
+            );
+        }
+      });
   }
 }
