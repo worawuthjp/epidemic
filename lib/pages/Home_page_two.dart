@@ -2,6 +2,7 @@ import 'package:covidapp/Show_Box.dart';
 import 'package:covidapp/constants.dart';
 import 'package:covidapp/models/UserModel.dart';
 import 'package:covidapp/pages/Hospital.dart';
+import 'package:covidapp/pages/QRCodePage.dart';
 import 'package:covidapp/pages/Timeline.dart';
 import 'package:covidapp/pages_show/Profile_User.dart';
 import 'package:covidapp/pages_show/Search_epidemic_page.dart';
@@ -43,6 +44,76 @@ class _HomePageTwoState extends State<HomePageTwo> {
     });
   }
 
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  TextEditingController search = TextEditingController();
+
+
+  bool isVisibilityNews = false;
+  bool isVisibilityStatus = true;
+
+  Future<List> getNews() async {
+    var url = Uri.parse("${hostname}/getNews/getNew.php") ;
+    var response = await http.get(url);
+    return json.decode(response.body);
+  }
+
+  Widget showStatusUser(User user) {
+    Widget icons;
+    Color color;
+    switch (user.status) {
+      case "มีความเสี่ยงสูง" :
+        color = Colors.red;
+        icons = Icon(Icons.mood_bad, color: Colors.white, size: 24,);
+        break;
+      case "เฝ้าระวัง":
+        color = Colors.yellow[800];
+        icons = Icon(Icons.mood_rounded, color: Colors.white, size: 24,);
+        break;
+      case "ไม่มีความเสี่ยง":
+        color = Colors.green;
+        icons =
+            Icon(Icons.emoji_emotions_outlined, color: Colors.white, size: 24,);
+        break;
+    }
+
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 80),
+      decoration: BoxDecoration(
+          border: Border.all(color: color, width: 3),
+          borderRadius: BorderRadius.circular(8)
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+
+          Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              decoration: BoxDecoration(
+                  color: color
+              ),
+              child: icons
+          ),
+
+          Expanded(
+            child: Container(
+              child: Text(
+                user.status,
+                style: GoogleFonts.kanit(
+                    color: color,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          )
+
+        ],
+      ),
+    );
+  }
+
   // Future<List> getData() async {
   //   // var url = Uri.parse(
   //   //     "http://172.20.10.8/ConnectDBProject/connectApp/getdata/getuserdatabase.php?id=${username}");
@@ -52,14 +123,14 @@ class _HomePageTwoState extends State<HomePageTwo> {
   //   return json.decode(response.body);
   // }
 
-  Future<TodayStatus> getNews() async {
-    var url = Uri.parse(
-        'https://covid19.th-stat.com/json/covid19v2/getTodayCases.json');
-    var response = await http.get(url);
-    TodayStatus todayStatus = todayStatusFromJson(response.body);
-    print(response.body);
-    return todayStatus;
-  }
+  // Future<TodayStatus> getNews() async {
+  //   var url = Uri.parse(
+  //       'https://covid19.th-stat.com/json/covid19v2/getTodayCases.json');
+  //   var response = await http.get(url);
+  //   TodayStatus todayStatus = todayStatusFromJson(response.body);
+  //   print(response.body);
+  //   return todayStatus;
+  // }
 
   @override
   void initState() {
@@ -68,64 +139,386 @@ class _HomePageTwoState extends State<HomePageTwo> {
     // getNews();
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //
+  //   return FutureBuilder(
+  //     future: getNews(),
+  //     builder: (context, snapshot) {
+  //         if(!snapshot.hasData){
+  //           return Center(child: CircularProgressIndicator(),);
+  //         }else{
+  //           if(snapshot.hasError) {
+  //             return Center(
+  //               child: Text(
+  //                 "Some Error is occurred",
+  //                 style: GoogleFonts.kanit(
+  //                     color: Colors.grey,
+  //                     fontWeight: FontWeight.bold,
+  //                     fontSize: 24
+  //                 ),
+  //               ),
+  //             );
+  //           }else{
+  //             TodayStatus todayStatus = snapshot.data;
+  //             int confirmed = todayStatus.confirmed;
+  //             int newConfirmed = todayStatus.newConfirmed;
+  //             int recovered = todayStatus.recovered;
+  //             int newRecovered = todayStatus.newRecovered;
+  //             int hospitalized = todayStatus.hospitalized;
+  //             int newHospitalized = todayStatus.newHospitalized;
+  //             int deaths = todayStatus.deaths;
+  //             int newDeaths = todayStatus.newDeaths;
+  //             String updateDate = todayStatus.updateDate;
+  //             return Items(
+  //               user: user,
+  //               confirmed: confirmed,
+  //               newConfirmed: newConfirmed,
+  //               recovered: recovered,
+  //               newRecovered: newRecovered,
+  //               hospitalized: hospitalized,
+  //               newHospitalized: newHospitalized,
+  //               deaths: deaths,
+  //               newDeaths: newDeaths,
+  //               updateDate: updateDate,
+  //             );
+  //           }
+  //         }
+  //     },
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
-
-    // return Items(
-    //     user: user,
-    //     confirmed: confirmed,
-    //     newConfirmed: newConfirmed,
-    //     recovered: recovered,
-    //     newRecovered: newRecovered,
-    //     hospitalized: hospitalized,
-    //     newHospitalized: newHospitalized,
-    //     deaths: deaths,
-    //     newDeaths: newDeaths,
-    //     updateDate: updateDate);
 
     return FutureBuilder(
       future: getNews(),
       builder: (context, snapshot) {
-          if(!snapshot.hasData){
-            return Center(child: CircularProgressIndicator(),);
-          }else{
-            if(snapshot.hasError) {
-              return Center(
-                child: Text(
-                  "Some Error is occurred",
-                  style: GoogleFonts.kanit(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24
-                  ),
+        if(!snapshot.hasData){
+          return Center(child: CircularProgressIndicator(),);
+        }else{
+          if(snapshot.hasError) {
+            return Center(
+              child: Text(
+                "Some Error is occurred",
+                style: GoogleFonts.kanit(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24
                 ),
-              );
-            }else{
-              TodayStatus todayStatus = snapshot.data;
-              int confirmed = todayStatus.confirmed;
-              int newConfirmed = todayStatus.newConfirmed;
-              int recovered = todayStatus.recovered;
-              int newRecovered = todayStatus.newRecovered;
-              int hospitalized = todayStatus.hospitalized;
-              int newHospitalized = todayStatus.newHospitalized;
-              int deaths = todayStatus.deaths;
-              int newDeaths = todayStatus.newDeaths;
-              String updateDate = todayStatus.updateDate;
-              return Items(
-                user: user,
-                confirmed: confirmed,
-                newConfirmed: newConfirmed,
-                recovered: recovered,
-                newRecovered: newRecovered,
-                hospitalized: hospitalized,
-                newHospitalized: newHospitalized,
-                deaths: deaths,
-                newDeaths: newDeaths,
-                updateDate: updateDate,
-              );
-            }
+              ),
+            );
+          }else{
+            return homepageWidget(user);
           }
+        }
       },
+    );
+  }
+
+  Widget homepageWidget (User user){
+    String now = DateFormat('kk').format(DateTime.now());
+    var timeNow = int.parse(now);
+    String studentID = user.userID;
+    String fullname = user.fullName;
+    String faculty = user.faculty;
+    String department = user.department;
+    String tel = user.tel;
+    String address = user.address;
+    String person = user.person;
+    String username = user.username;
+    String email = user.email;
+    String picture = user.picture;
+    String status = user.status;
+
+    return Container(
+        color: Colors.lightBlue[400],
+        child: SafeArea(
+          child: Scaffold(
+            body: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  children: [
+                    ListTile(
+                        title: timeNow > 11 && timeNow <= 17
+                            ? Text(
+                          'Good Afternoon',
+                          style: GoogleFonts.kanit(
+                              fontSize: 25,
+                              //fontWeight: FontWeight.w600,
+                              color: Colors.lightBlue[300]),
+                        )
+                            : timeNow > 17 && timeNow <= 23
+                            ? Text(
+                          'Good Evening',
+                          style: GoogleFonts.kanit(
+                              fontSize: 25,
+                              //fontWeight: FontWeight.w600,
+                              color: Colors.lightBlue[300]),
+                        )
+                            : Text(
+                          'Good Morning',
+                          style: GoogleFonts.kanit(
+                              fontSize: 25,
+                              //fontWeight: FontWeight.w600,
+                              color: Colors.lightBlue[300]),
+                        ),
+                        subtitle: Text(
+                          username,
+                          style: GoogleFonts.kanit(
+                              fontSize: 40,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.lightBlue),
+                        ),
+                        trailing: Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blue
+                          ),
+                          // child: CircleAvatar(
+                          //   radius: 60,
+                          //   backgroundImage: NetworkImage(
+                          //       "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
+                          //   backgroundColor: Colors.transparent,
+                          // ),
+                          child: user.picture == null ?
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.blue,
+                            child: Icon(
+                              Icons.person,
+                              color: Colors.white,
+                            ),
+                          ) :
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundImage: NetworkImage(
+                                "${hostname}/signup/avataruser/${user.picture}"),
+                            backgroundColor: Colors.transparent,
+                          ),
+                        )
+                    ),
+
+                    user.status != null ?
+                    showStatusUser(user): Container(),
+
+                    Form(
+                      key: formKey,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 15, 40, 15),
+                        child: TextFormField(
+                          controller: search,
+                          decoration: InputDecoration(
+                              fillColor: Colors.white,
+                              filled: true,
+                              hintText: 'ค้นหาข้อมูลโรคระบาด',
+                              hintStyle: GoogleFonts.kanit(
+                                  color: Color(0xffacacac), fontSize: 18),
+                              suffixIcon: IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return SearchEpidemicPage(
+                                            username: username,
+                                            picture: picture,
+                                            search: search.text,
+                                            studentID: studentID,
+                                            // gender: gender,
+                                            // address: address,
+                                            // phone: phone,
+                                            // education: education,
+                                            // person: person,
+                                            // nameUser: name,
+                                            // profilePic: picture,
+                                          );
+                                        }));
+                                  },
+                                  icon: Icon(Icons.search),
+                                  color: Color(0xffA2DAFF)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                  ))),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+
+                        Expanded(child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Ink(
+                                decoration: ShapeDecoration(
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15))),
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) => QRCodePage(user: user)));
+                                  },
+                                  icon: Image.asset(
+                                    'assets/images/qr-code.png',
+                                  ),
+                                  iconSize: 50,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text('QR Code',
+                                style: GoogleFonts.kanit(
+                                    color: Colors.black54, fontSize: 13),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),),
+
+                        Expanded(child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Ink(
+                                decoration: ShapeDecoration(
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15))),
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return VaccinePage(username, picture, studentID);
+                                        }));
+                                  },
+                                  icon: Image.asset(
+                                    'assets/images/vaccine.png',
+                                  ),
+                                  iconSize: 50,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text('Vaccine',
+                                  style: GoogleFonts.kanit(
+                                      color: Colors.black54, fontSize: 13)),
+                            ),
+                          ],
+                        ),),
+
+                        Expanded(child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Ink(
+                                decoration: ShapeDecoration(
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15))),
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return Hospital();
+                                        }));
+                                  },
+                                  icon: Image.asset(
+                                    'assets/images/hospital.png',
+                                  ),
+                                  iconSize: 50,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text('Hospital',
+                                  style: GoogleFonts.kanit(
+                                      color: Colors.black54, fontSize: 13)),
+                            ),
+                          ],
+                        ),),
+
+                        Expanded(child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Ink(
+                                decoration: ShapeDecoration(
+                                    color: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15))),
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return DataRisk(username, picture, studentID);
+                                        }));
+                                  },
+                                  icon: Image.asset(
+                                    'assets/images/risk.png',
+                                  ),
+                                  iconSize: 50,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: Text('Risk\nAssignment',
+                                style: GoogleFonts.kanit(
+                                    color: Colors.black54, fontSize: 12),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),),
+
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      child: FutureBuilder<List>(
+                          future: getNews(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              print("error");
+                            }
+                            if (snapshot.hasData) {
+                              return News(
+                                list: snapshot.data,
+                                name: username,
+                                profilePic: picture,
+                              );
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          }),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        )
     );
   }
 }
@@ -406,9 +799,10 @@ class _ItemsState extends State<Items> {
                           child: IconButton(
                             onPressed: () {
                               setState(() {
-                                isVisibilityNews = !isVisibilityNews;
-                                isVisibilityStatus = !isVisibilityStatus;
+                                // isVisibilityNews = !isVisibilityNews;
+                                // isVisibilityStatus = !isVisibilityStatus;
                               });
+
                             },
                             icon: Image.asset(
                               'assets/images/news.png',
@@ -486,7 +880,7 @@ class _ItemsState extends State<Items> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(42, 4, 0, 0),
-                        child: Text('News',
+                        child: Text('QR Code',
                             style: GoogleFonts.kanit(
                                 color: Colors.black54, fontSize: 13)),
                       ),
@@ -685,7 +1079,7 @@ class News extends StatelessWidget {
                     child: InkWell(
                       child: Image.network(
                         //"http://172.20.10.8/covid/getNews/avataruser/${list[index]['news_image']}",
-                        "http://172.20.10.8/epidemic/back/backend/upload/${list[index]['news_image']}",
+                        "${host_back_url}/back/backend/upload/${list[index]['news_image']}",
                         fit: BoxFit.fill,
                       ),
                       onTap: () {
@@ -710,3 +1104,5 @@ class News extends StatelessWidget {
     );
   }
 }
+
+

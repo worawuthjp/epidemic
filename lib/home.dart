@@ -1,5 +1,6 @@
 import 'package:covidapp/models/UserModel.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
+import 'package:covidapp/pages/QRCodePage.dart';
 import 'package:covidapp/pages/Timeline.dart';
 import 'package:covidapp/pages_show/Location.dart';
 import 'package:covidapp/pages_show/Profile_User.dart';
