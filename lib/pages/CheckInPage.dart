@@ -213,7 +213,7 @@ class _CheckInPageState extends State<CheckInPage> {
                 Expanded(
                   flex: 3,
                     child: FutureBuilder(
-                      future: checkin(user.userID, LatLng(placeMap.geometry.location.lat, placeMap.geometry.location.lng), placeMap.name, placeMap.name),
+                      future: checkin(user.userID, LatLng(placeMap.geometry.location.lat, placeMap.geometry.location.lng), placeMap.name, placeMap.placeId),
                       builder: (context, snapshotCheckIn) {
                         if (!snapshotCheckIn.hasData){
                           return statusCheckIn("Loading");
