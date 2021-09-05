@@ -82,7 +82,7 @@ class ShowNewsDetails extends StatelessWidget {
                     elevation: 5,
                     margin: EdgeInsets.all(20),
                     child: Image.network(
-                      "${host_back_url}/epidemic/back/backend/upload/$picture",
+                      "${host_back_url}/back/backend/upload/$picture",
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -90,45 +90,6 @@ class ShowNewsDetails extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Color(0xffA2DAFF),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              onPressed: () {
-                // Navigator.of(context).push(
-                //     MaterialPageRoute(builder: (context) => HomePageTwo()));
-              },
-              icon: Icon(
-                Icons.home,
-                color: Colors.white,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.add_location,
-                color: Colors.white,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.history,
-                color: Colors.white,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.person,
-                color: Colors.white,
-              ),
-            ),
-          ],
         ),
       ),
     );

@@ -1,11 +1,15 @@
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:covidapp/constants.dart';
+import 'package:covidapp/models/UserModel.dart';
 import 'package:covidapp/pages/Home_page_two.dart';
 import 'package:covidapp/pages_show/Profile_User.dart';
+import 'package:covidapp/service/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 class EditProfilePage extends StatefulWidget {
+  User user;
   String picture;
   String fullname;
   String studentID;
@@ -15,29 +19,14 @@ class EditProfilePage extends StatefulWidget {
   String address;
   String person;
 
-  EditProfilePage(
-      {this.picture,
-      this.fullname,
-      this.studentID,
-      this.faculty,
-      this.department,
-      this.tel,
-      this.address,
-      this.person});
+  EditProfilePage({this.user});
 
   @override
-  _EditProfilePageState createState() => _EditProfilePageState(
-      picture: picture,
-      fullname: fullname,
-      studentID: studentID,
-      faculty: faculty,
-      department: department,
-      tel: tel,
-      address: address,
-      person: person);
+  _EditProfilePageState createState() => _EditProfilePageState(user: user);
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  User user;
   String picture;
   String fullname;
   String studentID;
@@ -48,14 +37,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String person;
 
   _EditProfilePageState(
-      {this.picture,
-      this.fullname,
-      this.studentID,
-      this.faculty,
-      this.department,
-      this.tel,
-      this.address,
-      this.person});
+      {this.user});
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController userfullname;
@@ -68,6 +50,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   void initState() {
+
+    picture = user.picture;
+    fullname = user.fullName;
+    studentID = user.userID;
+    faculty = user.faculty;
+    department = user.department;
+    tel = user.tel;
+    address = user.address;
+    person = user.person;
+
     userfullname = TextEditingController(text: fullname);
     userstudentID = TextEditingController(text: studentID);
     userfaculty = TextEditingController(text: faculty);
@@ -78,18 +70,58 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
   }
 
-  void editUserData() {
-    var url = Uri.parse(
-        "${hostname}/edit/editUserData.php");
-    http.post(url, body: {
-      "user_studentID": userstudentID.text,
-      "user_fullname": userfullname.text,
-      "user_faculty": userfaculty.text,
-      "user_department": userdepartment.text,
-      "user_tel": usertel.text,
-      "user_address": useraddress.text,
-      "user_person": userperson.text,
-    });
+
+  // void editUserData() {
+  //   var url = Uri.parse(
+  //       "${hostname}/edit/editUserData.php");
+  //   http.post(url, body: {
+  //     "user_studentID": userstudentID.text,
+  //     "user_fullname": userfullname.text,
+  //     "user_faculty": userfaculty.text,
+  //     "user_department": userdepartment.text,
+  //     "user_tel": usertel.text,
+  //     "user_address": useraddress.text,
+  //     "user_person": userperson.text,
+  //   });
+  // }
+
+  Future handleEditUserData() async{
+    String isUpdate = await UserService().updateUserProfile(
+        userstudentID.text,
+        userfullname.text,
+        userfaculty.text,
+        userdepartment.text,
+        usertel.text,
+        useraddress.text,
+        userperson.text
+    );
+
+    User userEdit = User(
+      userID: user.userID,
+      fullName: userfullname.text,
+      faculty: userfaculty.text,
+      department: userdepartment.text,
+      tel: usertel.text,
+      address: useraddress.text,
+      person: userperson.text,
+      username: user.username,
+      email: user.email,
+      picture: user.picture,
+      status: user.status
+    );
+
+    if (isUpdate == "SUCCESS") {
+      Navigator.pop(context, userEdit);
+    }else if (isUpdate == "ERROR") {
+      ArtSweetAlert.show(
+          context: context,
+          artDialogArgs: ArtDialogArgs(
+              type: ArtSweetAlertType.danger,
+              title: "ERROR",
+              text: "ไม่สามารถแก้ไขข้อมูลส่วนตัวได้"
+          )
+      );
+    }
   }
 
   @override
@@ -108,7 +140,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 children: [
                   Padding(padding: EdgeInsets.only(left: 30)),
                   Text(
-                    'Edit Proflie',
+                    'Edit Profile',
                     style: GoogleFonts.kanit(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -247,20 +279,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 width: 240,
                 child: RaisedButton.icon(
                   onPressed: () {
-                    // editUserData();
-                    // Navigator.of(context).push(
-                    //     MaterialPageRoute(builder: (BuildContext context) {
-                    //   return ProfileUser(
-                    //
-                    //       userfullname.text,
-                    //       picture,
-                    //       userstudentID.text,
-                    //       userfaculty.text,
-                    //       userdepartment.text,
-                    //       usertel.text,
-                    //       useraddress.text,
-                    //       userperson.text);
-                    // }));
+                    handleEditUserData();
                   },
                   icon: Icon(
                     Icons.check,
@@ -283,45 +302,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
               )
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Color(0xffA2DAFF),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              onPressed: () {
-                // Navigator.of(context).push(
-                //     MaterialPageRoute(builder: (context) => HomePageTwo()));
-              },
-              icon: Icon(
-                Icons.home,
-                color: Colors.white,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.location_on,
-                color: Colors.white,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.history,
-                color: Colors.white,
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.person,
-                color: Colors.white,
-              ),
-            ),
-          ],
         ),
       ),
     );
