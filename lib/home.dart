@@ -15,22 +15,25 @@ class HomePage extends StatefulWidget {
 
   final String userID;
   final String userStatus;
+  final List<RiskArea> placeRisk;
 
   const HomePage({
     Key key,
     @required this.userID,
-    @required this.userStatus }) : super(key: key);
+    @required this.userStatus,
+    @required this.placeRisk }) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState(userID: userID, userStatus: userStatus);
+  _HomePageState createState() => _HomePageState(userID: userID, userStatus: userStatus, placeRisk: placeRisk);
 }
 
 class _HomePageState extends State<HomePage> {
 
-  _HomePageState({this.userID, this.userStatus});
+  _HomePageState({this.userID, this.userStatus, this.placeRisk});
 
   String userID;
   String userStatus;
+  List<RiskArea> placeRisk;
 
   int _currentIndex = 0;
 
@@ -67,15 +70,15 @@ class _HomePageState extends State<HomePage> {
     print("initState -> Username is : " + userID);
   }
 
-  Stream<User> getUserDetail(String userID, String status) async*{
-    User user = await UserService().getUserDetail(userID, status);
+  Stream<User> getUserDetail(String userID, String status,List<RiskArea> placeRisk) async*{
+    User user = await UserService().getUserDetail(userID, status, placeRisk);
     yield user;
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: getUserDetail(userID, userStatus),
+      stream: getUserDetail(userID, userStatus ,placeRisk),
       builder: (context, snapshot){
         switch(snapshot.connectionState){
           case ConnectionState.waiting:
@@ -89,6 +92,9 @@ class _HomePageState extends State<HomePage> {
               );
             }
             User user = snapshot.data;
+            if (placeRisk != null && placeRisk.isNotEmpty) {
+              print("RiskArea ID: ${placeRisk.first.riskAreaID}");
+            }
             return Scaffold(
               body: getPage(_currentIndex, user),
               bottomNavigationBar: BottomNavigationBar(

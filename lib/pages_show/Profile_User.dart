@@ -95,231 +95,380 @@ class _ProfileUserState extends State<ProfileUser> {
                 height: 20,
               ),
               Center(
-                child: CircleAvatar(
+                child: (user.picture == null || user.picture == "" )?
+                CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Colors.blue,
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 60,
+                  ),
+                ) :
+                CircleAvatar(
                   radius: 60,
                   backgroundImage: NetworkImage(
-                      "${hostname}/signup/avataruser/$picture"),
+                      "${hostname}/signup/avataruser/${user.picture}"),
+                  backgroundColor: Colors.transparent,
                 ),
               ),
               SizedBox(
                 height: 20,
               ),
+
               Container(
-                child: Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Container(
-                      // width: 341,
-                        height: 370,
-                        margin: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(31))),
-                    Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
-                          child: Row(
-                            children: [
-                              Text(
-                                'ชื่อผู้ใช้งาน :',
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "$fullname",
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.lightBlue),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
-                          child: Row(
-                            children: [
-                              Text(
-                                'รหัสนักศึกษา :',
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "$studentID",
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.lightBlue),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
-                          child: Row(
-                            children: [
-                              Text(
-                                'คณะ :',
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "$faculty",
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.lightBlue),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
-                          child: Row(
-                            children: [
-                              Text(
-                                'ภาควิชา :',
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "$department",
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.lightBlue),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
-                          child: Row(
-                            children: [
-                              Text(
-                                'เบอร์โทรศัพท์ที่ติดต่อได้ :',
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "$tel",
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.lightBlue),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
-                          child: Row(
-                            children: [
-                              Text(
-                                'ที่อยู่ปัจจุบัน :',
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "$address",
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.lightBlue),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          // margin: EdgeInsets.all(20),
-                          padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
-                          child: Row(
-                            children: [
-                              Text(
-                                'ข้อมูลบุคคลที่ติดต่อได้ :',
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "$person",
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.lightBlue),
-                                textAlign: TextAlign.start,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
-                          child: Row(
-                            children: [
-                              Text(
-                                'สถานะฉีดวัคซีน :',
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              list.isEmpty
-                                  ? Text(
-                                "กรุณาแสดงผลการฉีดวัคซีน",
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xffFF0000)),
-                              )
-                                  : list[0]['user_status'] == "อนุมัติ" ||
-                                  list[0]['user_status'] == "ยืนยัน"
-                                  ? Text(
-                                'ได้รับการยืนยันแล้ว',
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xff38FD07)),
-                              )
-                                  : list[0]['user_status'] == "No" ||
-                                  list[0]['user_status'] == "no"
-                                  ? Text(
-                                "ยังไม่ได้รับการยืนยัน",
-                                style: GoogleFonts.kanit(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xffFF0000)),
-                              )
-                                  : Text('')
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                  ],
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.only(
+                   top: 16, right: 16, bottom: 16
                 ),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(31)
+                ),
+                child: Column(
+                    children: [
+
+                      Container(
+
+                        padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                child: Text(
+                                  'ชื่อผู้ใช้งาน :',
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16, fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(width: 10,),
+
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                child: Text(
+                                  "$fullname",
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.lightBlue),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                child: Text(
+                                  'รหัสนักศึกษา :',
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16, fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: 10,
+                            ),
+
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                child: Text(
+                                  "$studentID",
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.lightBlue),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                child: Text(
+                                  'คณะ :',
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16, fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: 10,
+                            ),
+
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                child: Text(
+                                  "$faculty",
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.lightBlue),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                            )
+
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                child: Text(
+                                  'ภาควิชา :',
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16, fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: 10,
+                            ),
+
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                child: Text(
+                                  "$department",
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.lightBlue),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        padding: EdgeInsets.fromLTRB(4, 15, 10, 5),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                child: Text(
+                                  'เบอร์โทรศัพท์ที่ติดต่อได้ :',
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16, fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: 10,
+                            ),
+
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                child: Text(
+                                  "$tel",
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.lightBlue),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                            )
+
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                child: Text(
+                                  'ที่อยู่ปัจจุบัน :',
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16, fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: 10,
+                            ),
+
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                child: Text(
+                                  "$address",
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.lightBlue),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                            )
+
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        // margin: EdgeInsets.all(20),
+                        padding: EdgeInsets.fromLTRB(40, 15, 10, 5),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                child: Text(
+                                  'ข้อมูลบุคคลที่ติดต่อได้ :',
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16, fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.end,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: 10,
+                            ),
+
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                child: Text(
+                                  "$person",
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.lightBlue),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      Container(
+                        padding: EdgeInsets.fromLTRB(16, 15, 10, 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                child: Text(
+                                  'สถานะฉีดวัคซีน :',
+                                  style: GoogleFonts.kanit(
+                                      fontSize: 16, fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              width: 10,
+                            ),
+
+                            Expanded(
+                                flex: 5,
+                                child: Container(
+                                  child: list.isEmpty
+                                      ? Text(
+                                    "กรุณาแสดงผลการฉีดวัคซีน",
+                                    style: GoogleFonts.kanit(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xffFF0000)),
+                                  )
+                                      : list[0]['user_status'] == "อนุมัติ" ||
+                                      list[0]['user_status'] == "ยืนยัน"
+                                      ? Text(
+                                    'ได้รับการยืนยันแล้ว',
+                                    style: GoogleFonts.kanit(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xff38FD07)),
+                                  )
+                                      : list[0]['user_status'] == "No" ||
+                                      list[0]['user_status'] == "no"
+                                      ? Text(
+                                    "ยังไม่ได้รับการยืนยัน",
+                                    style: GoogleFonts.kanit(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xffFF0000)),
+                                  )
+                                      : Text(''),
+                                )
+                            )
+
+
+                          ],
+                        ),
+                      ),
+
+                    ],
+                  )
               ),
+
               SizedBox(
                 height: 5,
               ),

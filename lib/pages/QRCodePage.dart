@@ -51,7 +51,11 @@ class _QRCodePageState extends State<QRCodePage> {
                     trailing: Container(
                       width: 60,
                       height: 60,
-                      child: user.picture == null ?
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.blue
+                      ),
+                      child: (user.picture == null || user.picture == "" )?
                       CircleAvatar(
                         radius: 60,
                         backgroundColor: Colors.blue,

@@ -25,7 +25,7 @@ class CheckInPage extends StatefulWidget {
 
 class _CheckInPageState extends State<CheckInPage> {
   
-  FlutterLocalNotificationsPlugin localNotification = FlutterLocalNotificationsPlugin();
+  // FlutterLocalNotificationsPlugin localNotification = FlutterLocalNotificationsPlugin();
 
   _CheckInPageState({this.user});
   User user;
@@ -36,38 +36,38 @@ class _CheckInPageState extends State<CheckInPage> {
 
   @override
   void initState() {
-    initialize();
+    // initialize();
     super.initState();
   }
 
-  Future initialize() async {
-    var androidInitialize = AndroidInitializationSettings('ic_launcher');
-    var iOSInitialize = IOSInitializationSettings();
-    var initializationSettings = InitializationSettings(
-        android: androidInitialize, iOS: iOSInitialize);
-    await localNotification.initialize(initializationSettings);
-  }
+  // Future initialize() async {
+  //   var androidInitialize = AndroidInitializationSettings('ic_launcher');
+  //   var iOSInitialize = IOSInitializationSettings();
+  //   var initializationSettings = InitializationSettings(
+  //       android: androidInitialize, iOS: iOSInitialize);
+  //   await localNotification.initialize(initializationSettings);
+  // }
 
-  sendNotification() async {
-    var androidDetails = AndroidNotificationDetails('channelId',
-        'Local Notification', 'This is the description of the Notification, you can write anything',
-    color: Colors.blue,
-    enableLights: true,
-    enableVibration: true,
-    largeIcon: DrawableResourceAndroidBitmap('ic_launcher'),
-    styleInformation: MediaStyleInformation(
-      htmlFormatContent: true, htmlFormatTitle: true
-    ),
-    importance: Importance.max);
-
-    var iOSDetails = IOSNotificationDetails();
-
-    var generalNotificationDetails = NotificationDetails(
-      android: androidDetails, iOS: iOSDetails);
-
-    await localNotification.show(0, "สถานะการเช็คอิน",
-        'คุณอยู่ในพื้นที่เสี่ยง โปรดกักตัว 14 วัน', generalNotificationDetails);
-  }
+  // sendNotification() async {
+  //   var androidDetails = AndroidNotificationDetails('channelId',
+  //       'Local Notification', 'This is the description of the Notification, you can write anything',
+  //   color: Colors.blue,
+  //   enableLights: true,
+  //   enableVibration: true,
+  //   largeIcon: DrawableResourceAndroidBitmap('ic_launcher'),
+  //   styleInformation: MediaStyleInformation(
+  //     htmlFormatContent: true, htmlFormatTitle: true
+  //   ),
+  //   importance: Importance.max);
+  //
+  //   var iOSDetails = IOSNotificationDetails();
+  //
+  //   var generalNotificationDetails = NotificationDetails(
+  //     android: androidDetails, iOS: iOSDetails);
+  //
+  //   await localNotification.show(0, "สถานะการเช็คอิน",
+  //       'คุณอยู่ในพื้นที่เสี่ยง โปรดกักตัว 14 วัน', generalNotificationDetails);
+  // }
   
   Future<LatLng> getUserLocation() async{
 
@@ -181,11 +181,6 @@ class _CheckInPageState extends State<CheckInPage> {
     bool isRisk = data["isRisk"];
     print("Check-in : message => " + message);
     print("Check-in : isRisk => ${isRisk.toString()}");
-
-    if (isRisk){
-      sendNotification();
-      await Future.delayed(Duration(seconds: 1));
-    }
 
     return isRisk;
   }

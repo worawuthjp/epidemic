@@ -107,7 +107,7 @@ class _TimelinePageState extends State<TimelinePage> {
                     trailing: Container(
                       width: 60,
                       height: 60,
-                      child: user.picture == null ?
+                      child: (user.picture == null || user.picture == "") ?
                       CircleAvatar(
                         radius: 60,
                         backgroundColor: Colors.blue,

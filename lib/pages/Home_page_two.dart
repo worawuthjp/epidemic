@@ -5,6 +5,7 @@ import 'package:covidapp/pages/Hospital.dart';
 import 'package:covidapp/pages/QRCodePage.dart';
 import 'package:covidapp/pages/Timeline.dart';
 import 'package:covidapp/pages_show/Profile_User.dart';
+import 'package:covidapp/pages_show/RiskDetail.dart';
 import 'package:covidapp/pages_show/Search_epidemic_page.dart';
 import 'package:covidapp/pages/ShowNewsList.dart';
 //import 'package:covidapp/pages/Map_Show.dart';
@@ -47,10 +48,6 @@ class _HomePageTwoState extends State<HomePageTwo> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController search = TextEditingController();
 
-
-  bool isVisibilityNews = false;
-  bool isVisibilityStatus = true;
-
   Future<List> getNews() async {
     var url = Uri.parse("${hostname}/getNews/getNew.php") ;
     var response = await http.get(url);
@@ -77,39 +74,62 @@ class _HomePageTwoState extends State<HomePageTwo> {
     }
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 80),
-      decoration: BoxDecoration(
-          border: Border.all(color: color, width: 3),
-          borderRadius: BorderRadius.circular(8)
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-
-          Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              decoration: BoxDecoration(
-                  color: color
-              ),
-              child: icons
-          ),
-
-          Expanded(
-            child: Container(
-              child: Text(
-                user.status,
-                style: GoogleFonts.kanit(
-                    color: color,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold
-                ),
-                textAlign: TextAlign.center,
-              ),
+      padding: EdgeInsets.symmetric(horizontal: 32),
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: (){
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => RiskDetail(user: user)));
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: color, width: 3),
+                borderRadius: BorderRadius.circular(8)
             ),
-          )
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
 
-        ],
+                Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    decoration: BoxDecoration(
+                        color: color
+                    ),
+                    child: icons
+                ),
+
+                Expanded(
+                  child: Container(
+                    child: (user.userPlaceRisk.length != 0)
+                    ? Text(
+                      "${user.userPlaceRisk.first.epidemicTopic} : ${user.status}",
+                      style: GoogleFonts.kanit(
+                          color: color,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold
+                      ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                    )
+                    : Text(
+                      "${user.status}",
+                      style: GoogleFonts.kanit(
+                          color: color,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold
+                      ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                )
+
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -191,29 +211,31 @@ class _HomePageTwoState extends State<HomePageTwo> {
   @override
   Widget build(BuildContext context) {
 
-    return FutureBuilder(
-      future: getNews(),
-      builder: (context, snapshot) {
-        if(!snapshot.hasData){
-          return Center(child: CircularProgressIndicator(),);
-        }else{
-          if(snapshot.hasError) {
-            return Center(
-              child: Text(
-                "Some Error is occurred",
-                style: GoogleFonts.kanit(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24
-                ),
-              ),
-            );
-          }else{
-            return homepageWidget(user);
-          }
-        }
-      },
-    );
+    return homepageWidget(user);
+    //
+    // return FutureBuilder(
+    //   future: getNews(),
+    //   builder: (context, snapshot) {
+    //     if(!snapshot.hasData){
+    //       return Center(child: CircularProgressIndicator(),);
+    //     }else{
+    //       if(snapshot.hasError) {
+    //         return Center(
+    //           child: Text(
+    //             "Some Error is occurred",
+    //             style: GoogleFonts.kanit(
+    //                 color: Colors.grey,
+    //                 fontWeight: FontWeight.bold,
+    //                 fontSize: 24
+    //             ),
+    //           ),
+    //         );
+    //       }else{
+    //         return homepageWidget(user);
+    //       }
+    //     }
+    //   },
+    // );
   }
 
   Widget homepageWidget (User user){
@@ -283,7 +305,7 @@ class _HomePageTwoState extends State<HomePageTwo> {
                           //       "http://172.20.10.8/ConnectDBProject/connectApp/signup/avataruser/$picture"),
                           //   backgroundColor: Colors.transparent,
                           // ),
-                          child: user.picture == null ?
+                          child: (user.picture == null || user.picture == "" )?
                           CircleAvatar(
                             radius: 60,
                             backgroundColor: Colors.blue,
@@ -617,39 +639,40 @@ class _ItemsState extends State<Items> {
     }
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 80),
-      decoration: BoxDecoration(
-        border: Border.all(color: color, width: 3),
-        borderRadius: BorderRadius.circular(8)
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: color, width: 3),
+          borderRadius: BorderRadius.circular(8)
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
 
-          Container(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              decoration: BoxDecoration(
-                  color: color
-              ),
-              child: icons
-          ),
-
-          Expanded(
-            child: Container(
-              child: Text(
-                user.status,
-                style: GoogleFonts.kanit(
-                  color: color,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                decoration: BoxDecoration(
+                    color: color
                 ),
-                textAlign: TextAlign.center,
-              ),
+                child: icons
             ),
-          )
 
-        ],
+            Expanded(
+              child: Container(
+                child: Text(
+                  "${user.userPlaceRisk.first.adminID} : ${user.status}",
+                  style: GoogleFonts.kanit(
+                    color: color,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+
+          ],
+        ),
       ),
     );
   }

@@ -86,25 +86,29 @@ class _SignInPageState extends State<SignInPage> {
   // }
 
   Future handleLogin(String username, String password) async{
-    Map<String, dynamic> loginDetail = await UserService().login(username, password);
-    if (loginDetail["msg"] != "error") {
-      String userID = loginDetail["userID"];
-      String status = loginDetail["status"];
+    Login loginDetail = await UserService().login(username, password);
+    if (loginDetail.message != "error") {
+      String userID = loginDetail.userID;
+      String status = loginDetail.status;
+      List<RiskArea> placeRisk = List<RiskArea>();
+      if (loginDetail.places != null) {
+        placeRisk = loginDetail.places;
+      }
 
       setState(() {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return HomePage(userID: userID, userStatus: status,);
+          return HomePage(userID: userID, userStatus: status, placeRisk: placeRisk,);
         }));
       });
     }
     else{
-      String message = loginDetail["errMsg"];
+      String message = loginDetail.errMsg;
       ArtSweetAlert.show(
         context: context,
         artDialogArgs: ArtDialogArgs(
           type: ArtSweetAlertType.warning,
           title: "Login FAIL",
-          text: message,
+          text: (message == null) ? "Username or Password not correct" : message,
         ));
     }
   }

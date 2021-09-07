@@ -159,18 +159,14 @@ class _CaptureFaceState extends State<CaptureFace> {
 
     if (response.statusCode == 200 && data["isSent"]) {
       print('Insert User info. & Can Sent E-mail');
-      bool isSendEmail = true;
-        ArtSweetAlert.show(
-            context: context,
-            artDialogArgs: ArtDialogArgs(
-                type: ArtSweetAlertType.success,
-                title: "ลงทะเบียนเรียบร้อย",
-                text: "กรุณายืนยันรหัสผ่านในอีเมลล์"
-            )
-        );
 
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => SignInPage()));
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => MyApp(),
+        ),
+            (route) => false,
+      );
     }
     else {
       print('Not Insert User Info.');

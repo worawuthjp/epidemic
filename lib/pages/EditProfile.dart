@@ -165,10 +165,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 height: 20,
               ),
               Center(
-                child: CircleAvatar(
+                child: (user.picture == null || user.picture == "" )?
+                CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Colors.blue,
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 60,
+                  ),
+                ) :
+                CircleAvatar(
                   radius: 60,
                   backgroundImage: NetworkImage(
-                      "${hostname}/signup/avataruser/$picture"),
+                      "${hostname}/signup/avataruser/${user.picture}"),
+                  backgroundColor: Colors.transparent,
                 ),
               ),
               SizedBox(

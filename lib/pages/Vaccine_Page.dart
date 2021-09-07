@@ -121,12 +121,29 @@ class _VaccinePageState extends State<VaccinePage> {
                   ),
                 ),
                 Spacer(),
+
                 Container(
-                  padding: EdgeInsets.only(right: 30),
-                  child: CircleAvatar(
-                    radius: 27,
+                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.blue
+                  ),
+                  child: (picture == null || picture == "" )?
+                  CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Colors.blue,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.white,
+                    ),
+                  ) :
+                  CircleAvatar(
+                    radius: 60,
                     backgroundImage: NetworkImage(
-                        "${hostname}/signup/avataruser/$picture"),
+                        "${hostname}/signup/avataruser/${picture}"),
+                    backgroundColor: Colors.transparent,
                   ),
                 )
               ],
